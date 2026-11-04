@@ -313,6 +313,20 @@
                     <button onclick="saveMasterBranding()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow">Save & Apply Text Changes</button>
                 </div>
 
+                <!-- Web Serial Port Connection Panel for ESP32 -->
+                <div class="bg-white p-4 rounded-2xl border border-purple-200 mb-4 space-y-3 text-xs shadow-sm">
+                    <h3 class="font-extrabold text-purple-900 border-b pb-1 flex items-center justify-between">
+                        <span>ESP32 Hardware Serial Port</span>
+                        <span id="serial-status-badge" class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold">Disconnected</span>
+                    </h3>
+                    <p class="text-slate-500 text-[11px]">Connect your ESP32 microcontroller via USB to trigger physical LED/Motor dispensing in real-time.</p>
+                    <div class="flex gap-2">
+                        <button onclick="connectSerialPort()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl shadow">Connect USB Port</button>
+                        <button onclick="disconnectSerialPort()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 px-4 rounded-xl">Disconnect</button>
+                    </div>
+                    <div id="serial-log-box" class="bg-slate-950 text-emerald-400 p-2.5 rounded-xl font-mono text-[10px] h-20 overflow-y-auto border border-slate-800">Ready for connection...</div>
+                </div>
+
                 <h3 class="font-bold text-slate-800 text-xs mb-2">Master Inventory & Description Override</h3>
                 <div id="master-products-list" class="space-y-3 mb-4"></div>
             </div>
@@ -370,6 +384,91 @@
         let adminModalTimerInterval = null;
         let secretTapCount = 0;
         let secretTapTimer = null;
+
+        // Web Serial Global Variables
+        let serialPort = null;
+        let serialWriter = null;
+
+        async function connectSerialPort() {
+            if (!('serial' in navigator)) {
+                alert("Web Serial API is not supported in this browser. Please use Google Chrome or Edge.");
+                return;
+            }
+            try {
+                serialPort = await navigator.serial.requestPort();
+                await serialPort.open({ baudRate: 115200 });
+                serialWriter = serialPort.writable.getWriter();
+                document.getElementById('serial-status-badge').className = "px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold";
+                document.getElementById('serial-status-badge').textContent = "Connected";
+                appendSerialLog("Successfully connected to ESP32 Serial Port.");
+                readSerialLoop();
+            } catch (err) {
+                console.error(err);
+                appendSerialLog("Connection failed: " + err.message);
+            }
+        }
+
+        async function disconnectSerialPort() {
+            try {
+                if (serialWriter) {
+                    serialWriter.releaseLock();
+                    serialWriter = null;
+                }
+                if (serialPort) {
+                    await serialPort.close();
+                    serialPort = null;
+                }
+                document.getElementById('serial-status-badge').className = "px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold";
+                document.getElementById('serial-status-badge').textContent = "Disconnected";
+                appendSerialLog("Disconnected from serial port.");
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function sendSerialCommand(cmd) {
+            if (!serialWriter) {
+                appendSerialLog("Port not connected. Command skipped: " + cmd);
+                return;
+            }
+            try {
+                const encoder = new TextEncoder();
+                await serialWriter.write(encoder.encode(cmd + "\n"));
+                appendSerialLog("Sent: " + cmd);
+            } catch (err) {
+                console.error(err);
+                appendSerialLog("Error sending command: " + err.message);
+            }
+        }
+
+        async function readSerialLoop() {
+            while (serialPort && serialPort.readable) {
+                const textDecoder = new TextDecoderStream();
+                const readableStreamClosed = serialPort.readable.pipeTo(textDecoder.writable);
+                const reader = textDecoder.readable.getReader();
+                try {
+                    while (true) {
+                        const { value, done } = await reader.read();
+                        if (done) break;
+                        if (value) {
+                            appendSerialLog("ESP32: " + value.trim());
+                        }
+                    }
+                } catch (err) {
+                    console.error(err);
+                } finally {
+                    reader.releaseLock();
+                }
+            }
+        }
+
+        function appendSerialLog(msg) {
+            const box = document.getElementById('serial-log-box');
+            if (box) {
+                box.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+                box.scrollTop = box.scrollHeight;
+            }
+        }
 
         function showScreen(screenId) {
             ['welcome-screen', 'catalog-screen', 'cart-screen', 'payment-screen', 'dispensing-screen', 'receipt-screen', 'admin-screen', 'master-screen'].forEach(s => {
@@ -561,12 +660,19 @@
         function startDispensingProcess() {
             showScreen('dispensing-screen');
             const itemsToDispense = [];
+            let firstItemId = null;
+            let productIdx = 1;
+
             for (const [id, qty] of Object.entries(cart)) {
                 const item = CATALOG.find(i => i.id === id);
                 if (item) {
+                    if (!firstItemId) firstItemId = item.id;
                     for (let i = 0; i < qty; i++) itemsToDispense.push(item);
                 }
             }
+
+            // Send command over Web Serial to ESP32 to trigger physical LED/Motor
+            sendSerialCommand("DISPENSE:P1");
 
             const totalItems = itemsToDispense.length;
             const titleMsg = document.getElementById('dispensing-title-msg');
