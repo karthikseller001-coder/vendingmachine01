@@ -58,10 +58,10 @@
         .item-drop { animation: dropAnimation 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-800 antialiased flex items-center justify-center min-h-screen p-0 sm:p-4">
+<body class="bg-slate-950 text-slate-800 antialiased flex items-center justify-center min-h-screen p-0 sm:p-6">
 
-    <!-- Outer Device Surround -->
-    <div class="w-full max-w-md bg-white shadow-2xl rounded-none sm:rounded-[36px] overflow-hidden flex flex-col h-screen sm:h-[92vh] sm:max-h-[880px] relative border-0 sm:border-[8px] sm:border-slate-800 shrink-0">
+    <!-- Outer Device Surround - Optimized for Mobile & Desktop Compatibility -->
+    <div class="w-full max-w-full sm:max-w-2xl lg:max-w-4xl bg-white shadow-2xl rounded-none sm:rounded-[36px] overflow-hidden flex flex-col h-screen sm:h-[92vh] sm:max-h-[920px] relative border-0 sm:border-[8px] sm:border-slate-800 shrink-0">
 
         <!-- Top Header Bar -->
         <header class="bg-vending-header text-white px-5 py-3.5 flex items-center justify-between shadow-lg shrink-0 z-20 border-b border-emerald-900/40">
@@ -87,7 +87,7 @@
 
             <!-- 1. WELCOME SCREEN -->
             <div id="welcome-screen" class="screen flex flex-col items-center justify-between px-6 py-8 text-center h-full relative overflow-hidden bg-gradient-to-b from-emerald-900/5 via-vending-bg to-amber-500/5">
-                <div class="my-auto relative z-10 flex flex-col items-center w-full">
+                <div class="my-auto relative z-10 flex flex-col items-center w-full max-w-md">
                     <div id="welcome-logo-container" class="w-28 h-28 bg-gradient-to-tr from-vending-header to-emerald-600 rounded-3xl flex items-center justify-center mb-5 shadow-2xl border-4 border-white overflow-hidden">
                         <img id="welcome-logo-img" src="" class="w-full h-full object-cover hidden" onerror="this.classList.add('hidden'); document.getElementById('welcome-logo-icon').classList.remove('hidden');">
                         <i id="welcome-logo-icon" class="fa-solid fa-store text-4xl text-white drop-shadow"></i>
@@ -121,8 +121,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-4 flex-1 overflow-y-auto pb-28">
-                    <div id="product-grid" class="grid grid-cols-2 gap-3 items-stretch"></div>
+                <div class="p-4 sm:p-6 flex-1 overflow-y-auto pb-28">
+                    <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch"></div>
                 </div>
             </div>
 
@@ -319,7 +319,7 @@
 
         </main>
 
-        <nav id="sticky-bottom-bar" class="hidden absolute bottom-9 left-3 right-3 bg-white/95 backdrop-blur-md border border-slate-200 px-4 py-2.5 rounded-2xl shadow-2xl z-30">
+        <nav id="sticky-bottom-bar" class="hidden absolute bottom-6 left-4 right-4 sm:left-8 sm:right-8 bg-white/95 backdrop-blur-md border border-slate-200 px-4 py-2.5 rounded-2xl shadow-2xl z-30 max-w-xl mx-auto">
             <div id="bottom-action-container" class="flex items-center justify-between w-full"></div>
         </nav>
 
