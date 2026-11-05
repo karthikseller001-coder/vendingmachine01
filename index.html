@@ -60,11 +60,11 @@
 </head>
 <body class="bg-slate-950 text-slate-800 antialiased flex items-center justify-center min-h-screen p-0">
 
-    <!-- Outer Device Surround - Expanded Full Width Landscape Desktop Support -->
-    <div class="w-full h-screen bg-white shadow-2xl rounded-none overflow-hidden flex flex-col relative border-0 shrink-0">
+    <!-- Outer Device Surround - Responsive height fix for Google Sites iframe -->
+    <div class="w-full min-h-screen sm:h-screen bg-white shadow-2xl rounded-none overflow-hidden flex flex-col relative border-0 shrink-0">
 
         <!-- Top Header Bar -->
-        <header class="bg-vending-header text-white px-6 py-4 flex items-center justify-between shadow-lg shrink-0 z-20 border-b border-emerald-900/40">
+        <header class="bg-vending-header text-white px-6 py-3.5 flex items-center justify-between shadow-lg shrink-0 z-20 border-b border-emerald-900/40">
             <div class="flex items-center gap-3 cursor-pointer select-none active:scale-95 transition-transform" onclick="handleSecretHeaderTap()">
                 <div class="bg-white/10 p-2 rounded-2xl flex items-center justify-center overflow-hidden w-10 h-10 border border-white/10 shadow-inner">
                     <i id="header-logo-icon" class="fa-solid fa-box-open text-xl text-amber-400"></i>
@@ -85,27 +85,28 @@
         <!-- Main Content Scrollable Area -->
         <main class="flex-1 overflow-y-auto relative bg-vending-bg flex flex-col w-full text-slate-800">
 
-            <!-- 1. WELCOME SCREEN -->
-            <div id="welcome-screen" class="screen flex flex-col items-center justify-between px-6 py-12 text-center h-full relative overflow-hidden bg-gradient-to-b from-emerald-900/5 via-vending-bg to-amber-500/5">
-                <div class="my-auto relative z-10 flex flex-col items-center w-full max-w-lg">
-                    <div id="welcome-logo-container" class="w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-tr from-vending-header to-emerald-600 rounded-3xl flex items-center justify-center mb-6 shadow-2xl border-4 border-white overflow-hidden">
+            <!-- 1. WELCOME SCREEN - Fixed height, centered content & clear padding for embedded view -->
+            <div id="welcome-screen" class="screen flex flex-col items-center justify-center px-4 py-6 text-center h-full min-h-full relative overflow-hidden bg-gradient-to-b from-emerald-900/5 via-vending-bg to-amber-500/5">
+                <div class="my-auto relative z-10 flex flex-col items-center w-full max-w-lg py-2">
+                    <div id="welcome-logo-container" class="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tr from-vending-header to-emerald-600 rounded-3xl flex items-center justify-center mb-4 shadow-xl border-4 border-white overflow-hidden shrink-0">
                         <img id="welcome-logo-img" src="" class="w-full h-full object-cover hidden" onerror="this.classList.add('hidden'); document.getElementById('welcome-logo-icon').classList.remove('hidden');">
-                        <i id="welcome-logo-icon" class="fa-solid fa-store text-5xl text-white drop-shadow"></i>
+                        <i id="welcome-logo-icon" class="fa-solid fa-store text-4xl sm:text-5xl text-white drop-shadow"></i>
                     </div>
                     
-                    <div id="welcome-badge-text" class="inline-block bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-widest mb-3 shadow-sm">
+                    <div id="welcome-badge-text" class="inline-block bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest mb-2 shadow-sm">
                         Welcome to
                     </div>
-                    <h2 id="welcome-title-text" class="text-4xl sm:text-5xl font-black mb-2 text-slate-900 tracking-tight leading-tight">Karthik's Shop</h2>
-                    <p id="welcome-subtitle-text" class="text-sm font-bold text-amber-700 tracking-wide uppercase mb-8 bg-amber-100/70 border border-amber-200/60 px-4 py-1.5 rounded-2xl inline-block">VendingGo! Smart Kiosk</p>
+                    <h2 id="welcome-title-text" class="text-3xl sm:text-4xl font-black mb-1 text-slate-900 tracking-tight leading-tight">Karthik's Shop</h2>
+                    <p id="welcome-subtitle-text" class="text-xs font-bold text-amber-700 tracking-wide uppercase mb-5 bg-amber-100/70 border border-amber-200/60 px-3.5 py-1 rounded-xl inline-block">VendingGo! Smart Kiosk</p>
                     
-                    <button onclick="showScreen('catalog-screen')" id="welcome-btn-text" class="w-full max-w-md bg-vending-header hover:bg-vending-headerDark active:scale-95 text-white font-extrabold py-5 px-10 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 text-base tracking-wide border border-emerald-700 mb-4">
+                    <!-- Fully Visible Start Shopping Button -->
+                    <button onclick="showScreen('catalog-screen')" id="welcome-btn-text" class="w-full max-w-xs bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-base border-2 border-emerald-600 mb-2 cursor-pointer">
                         <span id="welcome-btn-label">Start Shopping</span>
-                        <i class="fa-solid fa-arrow-right"></i>
+                        <i class="fa-solid fa-arrow-right text-amber-400"></i>
                     </button>
-                    <p class="text-xs text-emerald-700/80 font-bold tracking-wide">Tap above to explore items & order instantly</p>
+                    <p class="text-[11px] text-emerald-700/80 font-bold tracking-wide mb-2">Tap above to explore items & order instantly</p>
                 </div>
-                <div id="welcome-footer-text" class="text-xs text-slate-400 font-medium">Touch screen to begin order</div>
+                <div id="welcome-footer-text" class="text-[11px] text-slate-400 font-medium mt-auto pb-1">Touch screen to begin order</div>
             </div>
 
             <!-- 2. CATALOG SCREEN -->
@@ -230,6 +231,12 @@
                             <span id="receipt-final-total" class="text-emerald-600">₹0</span>
                         </div>
                     </div>
+
+                    <!-- Explicit Go To Home Page Button on Receipt Screen -->
+                    <button onclick="resetKiosk()" class="w-full bg-vending-header hover:bg-emerald-900 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-xs border border-emerald-700">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Go to Home Page</span>
+                    </button>
                 </div>
             </div>
 
@@ -333,11 +340,12 @@
 
         </main>
 
-        <nav id="sticky-bottom-bar" class="hidden absolute bottom-6 left-6 right-6 sm:left-12 sm:right-12 bg-white/95 backdrop-blur-md border border-slate-200 px-6 py-4 rounded-3xl shadow-2xl z-30 max-w-2xl mx-auto">
+        <!-- Sticky Bottom Bar Positioned Slightly Higher -->
+        <nav id="sticky-bottom-bar" class="hidden absolute bottom-10 left-4 right-4 sm:left-12 sm:right-12 bg-white/95 backdrop-blur-md border border-slate-200 px-5 py-3 rounded-3xl shadow-2xl z-30 max-w-2xl mx-auto">
             <div id="bottom-action-container" class="flex items-center justify-between w-full"></div>
         </nav>
 
-        <footer id="app-footer-text" class="w-full bg-slate-100 border-t border-slate-200 py-3.5 px-4 text-center text-xs text-slate-500 font-semibold z-10 shrink-0 mt-auto">
+        <footer id="app-footer-text" class="w-full bg-slate-100 border-t border-slate-200 py-2.5 px-4 text-center text-[11px] text-slate-500 font-semibold z-10 shrink-0 mt-auto">
             VendingGo! Smart System &bull; Realtime ESP32 Motor Controller
         </footer>
     </div>
@@ -481,12 +489,15 @@
             if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
             if (receiptTimerInterval) clearInterval(receiptTimerInterval);
 
+            // Show bottom bar ONLY on Catalog, Cart, and Payment screens
             const bottomBar = document.getElementById('sticky-bottom-bar');
-            if (['catalog-screen', 'cart-screen', 'payment-screen', 'receipt-screen'].includes(screenId)) {
+            if (['catalog-screen', 'cart-screen', 'payment-screen'].includes(screenId)) {
                 bottomBar.classList.remove('hidden');
+                bottomBar.style.display = 'block';
                 updateBottomBar(screenId);
             } else {
                 bottomBar.classList.add('hidden');
+                bottomBar.style.display = 'none';
             }
 
             if (screenId === 'catalog-screen') renderProducts();
@@ -555,8 +566,6 @@
                 `;
             } else if (screenId === 'payment-screen') {
                 container.innerHTML = `<button onclick="showScreen('cart-screen')" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold w-full">Cancel Payment</button>`;
-            } else if (screenId === 'receipt-screen') {
-                container.innerHTML = `<button onclick="resetKiosk()" class="bg-vending-header text-white px-4 py-2.5 rounded-xl text-xs font-extrabold w-full">Back to Home</button>`;
             }
         }
 
@@ -660,19 +669,18 @@
         function startDispensingProcess() {
             showScreen('dispensing-screen');
             const itemsToDispense = [];
-            let firstItemId = null;
-            let productIdx = 1;
 
             for (const [id, qty] of Object.entries(cart)) {
                 const item = CATALOG.find(i => i.id === id);
                 if (item) {
-                    if (!firstItemId) firstItemId = item.id;
                     for (let i = 0; i < qty; i++) itemsToDispense.push(item);
                 }
             }
 
-            // Send command over Web Serial to ESP32 to trigger physical LED/Motor
-            sendSerialCommand("DISPENSE:P1");
+            // Send command for each item ordered via Web Serial to ESP32 microcontroller
+            for (const [id, qty] of Object.entries(cart)) {
+                sendSerialCommand(`DISPENSE:${id}:${qty}`);
+            }
 
             const totalItems = itemsToDispense.length;
             const titleMsg = document.getElementById('dispensing-title-msg');
@@ -744,6 +752,14 @@
             cart = {};
             if (timerInterval) clearInterval(timerInterval);
             if (receiptTimerInterval) clearInterval(receiptTimerInterval);
+            
+            // Scroll Catalog and Product Grid back to top for next customer
+            const catalogScreen = document.getElementById('catalog-screen');
+            if (catalogScreen) {
+                const scrollableContainer = catalogScreen.querySelector('.overflow-y-auto');
+                if (scrollableContainer) scrollableContainer.scrollTop = 0;
+            }
+            
             renderProducts();
             showScreen('welcome-screen');
         }
