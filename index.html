@@ -6,7 +6,7 @@
     <title>VendingGo! - Smart Vending Kiosk</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome Hooks -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -668,21 +668,16 @@
         function startDispensingProcess() {
             showScreen('dispensing-screen');
             const itemsToDispense = [];
-            const dispenseQueueSlots = [];
+            const dispenseSlotCommands = [];
 
             for (const [id, qty] of Object.entries(cart)) {
                 const item = CATALOG.find(i => i.id === id);
                 if (item) {
                     for (let i = 0; i < qty; i++) {
                         itemsToDispense.push(item);
-                        dispenseQueueSlots.push(item.slot || 'P1');
+                        dispenseSlotCommands.push(item.slot || 'P1');
                     }
                 }
-            }
-
-            // Send QUEUE command to ESP32 microcontroller
-            if (dispenseQueueSlots.length > 0) {
-                sendSerialCommand(`QUEUE:${dispenseQueueSlots.join(',')}`);
             }
 
             const totalItems = itemsToDispense.length;
@@ -700,6 +695,11 @@
             function dispenseNext() {
                 if (index < totalItems) {
                     const currentItem = itemsToDispense[index];
+                    const currentSlot = dispenseSlotCommands[index];
+                    
+                    // Send sequential command for the specific slot
+                    sendSerialCommand(currentSlot);
+
                     setTimeout(() => {
                         const itemEl = document.createElement('div');
                         itemEl.className = 'item-drop flex flex-col items-center bg-white p-2 rounded-2xl shadow-lg border border-slate-200 z-10';
@@ -707,7 +707,7 @@
                         if (trayContainer) trayContainer.appendChild(itemEl);
                         index++;
                         dispenseNext();
-                    }, 5000); // 5 seconds per item to match ESP32 delay sequence
+                    }, 5000); // 5 seconds per item to match ESP32 sequence
                 } else {
                     for (const [id, qty] of Object.entries(cart)) {
                         const item = CATALOG.find(i => i.id === id);
