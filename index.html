@@ -14,6 +14,10 @@
     <!-- Razorpay Checkout SDK for Live API Key Payments -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -194,7 +198,7 @@
                     
                     <div class="w-full bg-slate-900 border-4 border-slate-700 rounded-3xl p-4 min-h-[140px] flex items-center justify-center gap-3 flex-wrap relative shadow-2xl overflow-hidden mb-3" id="dispensed-items-container">
                         <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20 pointer-events-none"></div>
-                        <span class="text-[10px] font-bold text-slate-500 absolute top-2 left-3 tracking-widest uppercase">DISPENSING TRAY</span>
+                        <span class="text-[10px] font-bold text-slate-50500 absolute top-2 left-3 tracking-widest uppercase">DISPENSING TRAY</span>
                     </div>
 
                     <div id="collect-products-box" class="w-full bg-emerald-50 border-2 border-emerald-500 rounded-3xl p-6 text-center shadow-lg hidden mb-3">
@@ -365,6 +369,23 @@
     </div>
 
     <script>
+        // Firebase Configuration (మీ వివరాలను ఇక్కడ నమోదు చేయండి)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+
         const DEFAULT_CATALOG = [
             { id: 'coke', name: 'Coca-Cola Can', category: 'drinks', desc: 'Chilled 330ml Can with fresh refreshing taste', price: 40, stock: 8, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=150&auto=format&fit=crop&q=80', slot: 'P1' },
             { id: 'lays', name: 'Lays Potato Chips', category: 'snacks', desc: 'Classic Salted crispy 50g snack pack', price: 20, stock: 5, img: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=150&auto=format&fit=crop&q=80', slot: 'P2' },
@@ -474,6 +495,21 @@
                 box.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
                 box.scrollTop = box.scrollHeight;
             }
+        }
+
+        // Firebase Realtime Database లో ఆర్డర్ సేవ్ చేసే ఫంక్షన్
+        function saveOrderToFirebase(txId, totals, items) {
+            firebase.database().ref('orders/' + txId).set({
+                transactionId: txId,
+                totalAmount: totals.grandTotal,
+                items: items,
+                timestamp: new Date().toISOString(),
+                status: 'PAID'
+            }).then(() => {
+                console.log("Order saved to Firebase successfully");
+            }).catch((error) => {
+                console.error("Error saving order to Firebase: ", error);
+            });
         }
 
         function showScreen(screenId) {
@@ -681,10 +717,12 @@
             showScreen('dispensing-screen');
             const itemsToDispense = [];
             const dispenseSlotCommands = [];
+            const orderedItemsList = [];
 
             for (const [id, qty] of Object.entries(cart)) {
                 const item = CATALOG.find(i => i.id === id);
                 if (item) {
+                    orderedItemsList.push({ name: item.name, quantity: qty, price: item.price });
                     for (let i = 0; i < qty; i++) {
                         itemsToDispense.push(item);
                         dispenseSlotCommands.push(item.slot || 'P1');
@@ -729,12 +767,17 @@
                     }
                     saveCatalogLocal();
                     
+                    // ఆర్డర్ పూర్తయిన తర్వాత Firebase లో సేవ్ చేయండి
+                    const txId = "TXN" + Math.floor(100000 + Math.random() * 900000);
+                    const totals = getCartTotals();
+                    saveOrderToFirebase(txId, totals, orderedItemsList);
+                    
                     setTimeout(() => {
                         if (titleMsg) titleMsg.textContent = "Dispensing Completed!";
                         if (collectBox) collectBox.classList.remove('hidden');
                         
                         setTimeout(() => {
-                            generateReceipt();
+                            generateReceipt(txId);
                         }, 5000); 
                     }, 1000); 
                 }
@@ -742,8 +785,7 @@
             dispenseNext();
         }
 
-        function generateReceipt() {
-            const txId = "TXN" + Math.floor(100000 + Math.random() * 900000);
+        function generateReceipt(txId) {
             document.getElementById('receipt-tx-id').textContent = txId;
             document.getElementById('receipt-timestamp').textContent = new Date().toLocaleString();
 
