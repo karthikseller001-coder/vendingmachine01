@@ -59,7 +59,6 @@
 </head>
 <body class="bg-slate-950 text-slate-800 antialiased flex items-center justify-center min-h-screen p-0">
 
-    <!-- Outer Device Surround -->
     <div class="w-full min-h-screen sm:h-screen bg-white shadow-2xl rounded-none overflow-hidden flex flex-col relative border-0 shrink-0">
 
         <!-- Top Header Bar -->
@@ -364,8 +363,10 @@
         const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
         
-        const _supabase = window.supabase;
-        const supabase = _supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabase = null;
+        if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
 
         const DEFAULT_CATALOG = [
             { id: 'coke', name: 'Coca-Cola Can', category: 'drinks', desc: 'Chilled 330ml Can with fresh refreshing taste', price: 40, stock: 8, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=150&auto=format&fit=crop&q=80', slot: 'P1' },
@@ -394,7 +395,6 @@
         let secretTapTimer = null;
         let paymentCheckInterval = null;
 
-        // Web Serial Global Variables
         let serialPort = null;
         let serialWriter = null;
 
@@ -479,8 +479,11 @@
             }
         }
 
-        // Supabase లో ఆర్డర్ సేవ్ చేసే ఫంక్షన్
         async function saveOrderToSupabase(txId, totals, items) {
+            if (!supabase) {
+                console.warn("Supabase not initialized.");
+                return;
+            }
             const { data, error } = await supabase
                 .from('orders')
                 .insert([
@@ -1010,7 +1013,7 @@
             } else {
                 if(logoImgWelcome) logoImgWelcome.classList.add('hidden');
                 if(logoIconWelcome) logoIconWelcome.classList.remove('hidden');
-                if(logoImgHeader) logoImgHeader.classList.add('hidden');
+                if(logoImgHeader) logoImgHeader.classList.remove('hidden');
                 if(logoIconHeader) logoIconHeader.classList.remove('hidden');
             }
 
@@ -1046,6 +1049,7 @@
             document.getElementById('master-admin-new-pin').value = '';
         }
 
+        // Initialize App on Load
         window.addEventListener('DOMContentLoaded', () => {
             applyBrandingToUI();
             renderProducts();
