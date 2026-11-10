@@ -59,7 +59,7 @@
 </head>
 <body class="bg-slate-950 text-slate-800 antialiased flex items-center justify-center min-h-screen p-0">
 
-    <!-- Outer Device Surround - Responsive height fix for Google Sites iframe -->
+    <!-- Outer Device Surround -->
     <div class="w-full min-h-screen sm:h-screen bg-white shadow-2xl rounded-none overflow-hidden flex flex-col relative border-0 shrink-0">
 
         <!-- Top Header Bar -->
@@ -150,7 +150,7 @@
                 </div>
             </div>
 
-            <!-- 4. PAYMENT SCREEN - Fixed with Auto-Detection & No Manual Button -->
+            <!-- 4. PAYMENT SCREEN -->
             <div id="payment-screen" class="screen hidden px-5 py-5 flex flex-col items-center justify-between text-center h-full overflow-y-auto pb-28">
                 <div class="w-full max-w-sm mx-auto">
                     <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-2xl mb-3 flex flex-col items-center gap-1 shadow-sm">
@@ -173,7 +173,6 @@
                         <p class="text-xs font-black text-slate-900 mt-2">Amount to Pay: <span id="qr-total-amount" class="text-emerald-600 text-sm">₹0</span></p>
                     </div>
 
-                    <!-- Status indicator instead of manual button -->
                     <div id="payment-status-indicator" class="bg-emerald-50 border border-emerald-300 p-3 rounded-2xl flex items-center justify-center gap-2 text-emerald-800 text-xs font-bold animate-pulse">
                         <i class="fa-solid fa-spinner animate-spin"></i>
                         <span>Listening for payment confirmation...</span>
@@ -227,7 +226,6 @@
                         </div>
                     </div>
 
-                    <!-- Explicit Go To Home Page Button on Receipt Screen -->
                     <button onclick="resetKiosk()" class="w-full bg-vending-header hover:bg-emerald-900 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-xs border border-emerald-700 cursor-pointer">
                         <i class="fa-solid fa-house"></i>
                         <span>Go to Home Page</span>
@@ -335,7 +333,7 @@
 
         </main>
 
-        <!-- Sticky Bottom Bar Positioned Slightly Higher -->
+        <!-- Sticky Bottom Bar -->
         <nav id="sticky-bottom-bar" class="hidden absolute bottom-10 left-4 right-4 sm:left-12 sm:right-12 bg-white/95 backdrop-blur-md border border-slate-200 px-5 py-3 rounded-3xl shadow-2xl z-30 max-w-2xl mx-auto">
             <div id="bottom-action-container" class="flex items-center justify-between w-full"></div>
         </nav>
@@ -362,12 +360,12 @@
     </div>
 
     <script>
-        // Supabase Configuration 
-        const SUPABASE_URL = 'https://frayjqwwfumowxalkcik.supabase.co/rest/v1/';
-        const SUPABASE_ANON_KEY = 'sb_publishable_qYKVeoaR5QEHxJRntKdoKA_l5lr_Dev';
+        // Supabase Configuration
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
         
         const _supabase = window.supabase;
-        supabase = _supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = _supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const DEFAULT_CATALOG = [
             { id: 'coke', name: 'Coca-Cola Can', category: 'drinks', desc: 'Chilled 330ml Can with fresh refreshing taste', price: 40, stock: 8, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=150&auto=format&fit=crop&q=80', slot: 'P1' },
@@ -514,7 +512,6 @@
             if (receiptTimerInterval) clearInterval(receiptTimerInterval);
             if (paymentCheckInterval) clearInterval(paymentCheckInterval);
 
-            // Show bottom bar ONLY on Catalog, Cart, and Payment screens
             const bottomBar = document.getElementById('sticky-bottom-bar');
             if (['catalog-screen', 'cart-screen', 'payment-screen'].includes(screenId)) {
                 bottomBar.classList.remove('hidden');
