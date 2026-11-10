@@ -367,7 +367,7 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_qYKVeoaR5QEHxJRntKdoKA_l5lr_Dev';
         
         const _supabase = window.supabase;
-        const supabase = _supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabase = _supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const DEFAULT_CATALOG = [
             { id: 'coke', name: 'Coca-Cola Can', category: 'drinks', desc: 'Chilled 330ml Can with fresh refreshing taste', price: 40, stock: 8, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=150&auto=format&fit=crop&q=80', slot: 'P1' },
