@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VendingGo! - Smart Vending Kiosk</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Razorpay Checkout SDK for Live API Key Payments -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
@@ -58,7 +65,7 @@
     <div class="w-full min-h-screen sm:h-screen bg-white shadow-2xl rounded-none overflow-hidden flex flex-col relative border-0 shrink-0">
 
         <header class="bg-vending-header text-white px-6 py-3.5 flex items-center justify-between shadow-lg shrink-0 z-20 border-b border-emerald-900/40">
-            <div class="flex items-center gap-3 cursor-pointer select-none active:scale-95 transition-transform" onclick="handleSecretHeaderTap()">
+            <div class="flex items-center gap-3 cursor-pointer select-none active:scale-95 transition-transform" onclick="window.handleSecretHeaderTap()">
                 <div class="bg-white/10 p-2 rounded-2xl flex items-center justify-center overflow-hidden w-10 h-10 border border-white/10 shadow-inner">
                     <i id="header-logo-icon" class="fa-solid fa-box-open text-xl text-amber-400"></i>
                     <img id="header-logo-img" src="" class="w-full h-full object-cover hidden">
@@ -91,7 +98,7 @@
                     <h2 id="welcome-title-text" class="text-3xl sm:text-4xl font-black mb-1 text-slate-900 tracking-tight leading-tight">Karthik's Shop</h2>
                     <p id="welcome-subtitle-text" class="text-xs font-bold text-amber-700 tracking-wide uppercase mb-5 bg-amber-100/70 border border-amber-200/60 px-3.5 py-1 rounded-xl inline-block">VendingGo! Smart Kiosk</p>
                     
-                    <button onclick="showScreen('catalog-screen')" id="welcome-btn-text" class="w-full max-w-xs bg-emerald-800 hover:bg-emerald-950 active:scale-95 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-base border-2 border-emerald-600 mb-2 cursor-pointer">
+                    <button onclick="window.showScreen('catalog-screen')" id="welcome-btn-text" class="w-full max-w-xs bg-emerald-800 hover:bg-emerald-950 active:scale-95 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-base border-2 border-emerald-600 mb-2 cursor-pointer">
                         <span id="welcome-btn-label">Start Shopping</span>
                         <i class="fa-solid fa-arrow-right text-amber-400"></i>
                     </button>
@@ -105,7 +112,7 @@
                 <div class="p-4 sm:p-6 bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
                     <div class="flex items-center justify-between max-w-7xl mx-auto w-full">
                         <div class="flex items-center gap-3">
-                            <button onclick="resetKiosk()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 border border-slate-200">
+                            <button onclick="window.resetKiosk()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 border border-slate-200">
                                 <i class="fa-solid fa-house text-emerald-700"></i>
                                 <span>Home</span>
                             </button>
@@ -123,7 +130,7 @@
                 <div class="space-y-3">
                     <div class="flex items-center justify-between border-b border-slate-200 pb-2">
                         <h2 class="font-extrabold text-base text-slate-900">Cart Summary</h2>
-                        <button onclick="clearCart()" class="text-[11px] font-bold text-red-600 hover:text-red-700">Clear All</button>
+                        <button onclick="window.clearCart()" class="text-[11px] font-bold text-red-600 hover:text-red-700">Clear All</button>
                     </div>
                     <div id="cart-items-container" class="space-y-2 max-h-[340px] overflow-y-auto pr-1"></div>
                 </div>
@@ -167,11 +174,11 @@
                     </div>
 
                     <div class="w-full max-w-xs space-y-2 mx-auto">
-                        <button onclick="payWithRazorpaySDK()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-xs cursor-pointer mb-2">
+                        <button onclick="window.payWithRazorpaySDK()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-xs cursor-pointer mb-2">
                             <i class="fa-solid fa-credit-card"></i>
                             <span>Pay via Razorpay (Card/Netbanking)</span>
                         </button>
-                        <button onclick="verifyAndDispense()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-xl transition flex items-center justify-center gap-2 text-xs cursor-pointer">
+                        <button onclick="window.verifyAndDispense()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-xl transition flex items-center justify-center gap-2 text-xs cursor-pointer">
                             <i class="fa-solid fa-circle-check text-sm"></i>
                             <span>I Have Paid - Start Dispensing</span>
                         </button>
@@ -225,7 +232,7 @@
                         </div>
                     </div>
 
-                    <button onclick="resetKiosk()" class="w-full bg-vending-header hover:bg-emerald-900 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-xs border border-emerald-700 cursor-pointer">
+                    <button onclick="window.resetKiosk()" class="w-full bg-vending-header hover:bg-emerald-900 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-xs border border-emerald-700 cursor-pointer">
                         <i class="fa-solid fa-house"></i>
                         <span>Go to Home Page</span>
                     </button>
@@ -236,14 +243,14 @@
             <div id="admin-screen" class="screen hidden p-4 flex-1 overflow-y-auto">
                 <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
                     <h2 class="font-extrabold text-base text-slate-900">Admin Control Panel</h2>
-                    <button onclick="showScreen('catalog-screen')" class="bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold px-3 py-1 rounded-xl transition cursor-pointer">Close</button>
+                    <button onclick="window.showScreen('catalog-screen')" class="bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold px-3 py-1 rounded-xl transition cursor-pointer">Close</button>
                 </div>
 
                 <div class="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 space-y-2 text-xs shadow-sm">
                     <h3 class="font-bold text-slate-800">Change Admin Password PIN</h3>
                     <input type="password" id="admin-old-pin" placeholder="Current PIN" class="w-full p-2 border rounded-xl">
                     <input type="password" id="admin-new-pin" placeholder="New PIN (e.g. 1234)" class="w-full p-2 border rounded-xl">
-                    <button onclick="changeAdminPin()" class="w-full bg-slate-800 text-white font-bold py-2 rounded-xl cursor-pointer">Update Admin PIN</button>
+                    <button onclick="window.changeAdminPin()" class="w-full bg-slate-800 text-white font-bold py-2 rounded-xl cursor-pointer">Update Admin PIN</button>
                 </div>
 
                 <div class="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 space-y-2 text-xs shadow-sm">
@@ -255,7 +262,7 @@
                         <input type="number" id="new-item-stock" placeholder="Initial Stock" class="p-2 border rounded-xl">
                     </div>
                     <input type="text" id="new-item-img" placeholder="Image URL (Optional)" class="w-full p-2 border rounded-xl">
-                    <button onclick="addNewProduct()" class="w-full bg-emerald-700 text-white font-bold py-2 rounded-xl cursor-pointer">Add Product</button>
+                    <button onclick="window.addNewProduct()" class="w-full bg-emerald-700 text-white font-bold py-2 rounded-xl cursor-pointer">Add Product</button>
                 </div>
                 <h3 class="font-bold text-slate-800 text-xs mb-2">Manage Current Catalog</h3>
                 <div id="admin-products-list" class="space-y-3 mb-4"></div>
@@ -265,14 +272,14 @@
             <div id="master-screen" class="screen hidden p-4 flex-1 overflow-y-auto w-full">
                 <div class="flex items-center justify-between mb-3 border-b border-purple-200 pb-2">
                     <h2 class="font-extrabold text-base text-purple-950">Master System & Branding Controls</h2>
-                    <button onclick="showScreen('catalog-screen')" class="bg-red-500 text-white text-[11px] font-bold px-3 py-1 rounded-xl cursor-pointer">Close</button>
+                    <button onclick="window.showScreen('catalog-screen')" class="bg-red-500 text-white text-[11px] font-bold px-3 py-1 rounded-xl cursor-pointer">Close</button>
                 </div>
 
                 <div class="bg-white p-3.5 rounded-2xl border border-purple-200 mb-4 space-y-2 text-xs shadow-sm">
                     <h3 class="font-extrabold text-purple-900">Change Admin Password PIN (Master)</h3>
                     <input type="password" id="master-admin-old-pin" placeholder="Current PIN" class="w-full p-2 border rounded-xl">
                     <input type="password" id="master-admin-new-pin" placeholder="New Admin PIN" class="w-full p-2 border rounded-xl">
-                    <button onclick="changeMasterAdminPin()" class="w-full bg-purple-700 text-white font-bold py-2 rounded-xl cursor-pointer">Update Admin PIN</button>
+                    <button onclick="window.changeMasterAdminPin()" class="w-full bg-purple-700 text-white font-bold py-2 rounded-xl cursor-pointer">Update Admin PIN</button>
                 </div>
 
                 <div class="bg-white p-4 rounded-2xl border border-purple-200 mb-4 space-y-3 text-xs shadow-sm">
@@ -309,7 +316,7 @@
                         <label class="text-[10px] text-slate-500 font-bold">Footer Text:</label>
                         <input type="text" id="custom-footer-text" class="w-full p-2 border rounded-xl font-bold mt-1" value="VendingGo! Smart System • Realtime ESP32 Motor Controller">
                     </div>
-                    <button onclick="saveMasterBranding()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow cursor-pointer">Save & Apply Text Changes</button>
+                    <button onclick="window.saveMasterBranding()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow cursor-pointer">Save & Apply Text Changes</button>
                 </div>
 
                 <div class="bg-white p-4 rounded-2xl border border-purple-200 mb-4 space-y-3 text-xs shadow-sm">
@@ -319,8 +326,8 @@
                     </h3>
                     <p class="text-slate-500 text-[11px]">Connect your ESP32 microcontroller via USB to trigger physical LED/Motor dispensing in real-time.</p>
                     <div class="flex gap-2">
-                        <button onclick="connectSerialPort()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl shadow cursor-pointer">Connect USB Port</button>
-                        <button onclick="disconnectSerialPort()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 px-4 rounded-xl cursor-pointer">Disconnect</button>
+                        <button onclick="window.connectSerialPort()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-xl shadow cursor-pointer">Connect USB Port</button>
+                        <button onclick="window.disconnectSerialPort()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 px-4 rounded-xl cursor-pointer">Disconnect</button>
                     </div>
                     <div id="serial-log-box" class="bg-slate-950 text-emerald-400 p-2.5 rounded-xl font-mono text-[10px] h-20 overflow-y-auto border border-slate-800">Ready for connection...</div>
                 </div>
@@ -349,714 +356,684 @@
             <input type="password" id="admin-pin-input" maxlength="10" placeholder="••••••••" class="w-full p-3 border-2 border-slate-200 rounded-2xl text-center text-lg font-black tracking-widest outline-none">
             <p id="pin-error-msg" class="text-xs text-red-600 font-bold hidden">Invalid Security PIN!</p>
             <div class="flex gap-2">
-                <button onclick="closeAdminAuthModal()" class="w-1/2 bg-slate-100 text-slate-700 py-2.5 rounded-xl text-xs font-bold cursor-pointer">Cancel</button>
-                <button onclick="verifyAdminPin()" class="w-1/2 bg-vending-header text-white py-2.5 rounded-xl text-xs font-bold cursor-pointer">Verify</button>
+                <button onclick="window.closeAdminAuthModal()" class="w-1/2 bg-slate-100 text-slate-700 py-2.5 rounded-xl text-xs font-bold cursor-pointer">Cancel</button>
+                <button onclick="window.verifyAdminPin()" class="w-1/2 bg-vending-header text-white py-2.5 rounded-xl text-xs font-bold cursor-pointer">Verify</button>
             </div>
         </div>
     </div>
 
     <script>
-        const SUPABASE_URL = "https://YOUR_SUPABASE_PROJECT_ID.supabase.co"; 
-        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        (function() {
+            const SUPABASE_URL = "https://YOUR_SUPABASE_PROJECT_ID.supabase.co"; 
+            const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; 
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const MERCHANT_UPI_ID = "your_merchant_upi_id@oksbi"; 
-        const RAZORPAY_KEY_ID = "YOUR_RAZORPAY_KEY_ID"; 
+            const MERCHANT_UPI_ID = "your_merchant_upi_id@oksbi"; 
+            const RAZORPAY_KEY_ID = "YOUR_RAZORPAY_KEY_ID"; 
 
-        const DEFAULT_CATALOG = [
-            { id: 'coke', name: 'Coca-Cola Can', category: 'drinks', desc: 'Chilled 330ml Can with fresh refreshing taste', price: 40, stock: 8, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=150&auto=format&fit=crop&q=80', slot: 'P1' },
-            { id: 'lays', name: 'Lays Potato Chips', category: 'snacks', desc: 'Classic Salted crispy 50g snack pack', price: 20, stock: 5, img: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=150&auto=format&fit=crop&q=80', slot: 'P2' },
-            { id: 'choco', name: 'Dark Chocolate Bar', category: 'sweets', desc: 'Rich 70% Cocoa premium 80g bar', price: 50, stock: 12, img: 'https://images.unsplash.com/photo-1582176647444-1e1237978633?w=150&auto=format&fit=crop&q=80', slot: 'P3' }
-        ];
+            const DEFAULT_CATALOG = [
+                { id: 'coke', name: 'Coca-Cola Can', category: 'drinks', desc: 'Chilled 330ml Can with fresh refreshing taste', price: 40, stock: 8, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=150&auto=format&fit=crop&q=80', slot: 'P1' },
+                { id: 'lays', name: 'Lays Potato Chips', category: 'snacks', desc: 'Classic Salted crispy 50g snack pack', price: 20, stock: 5, img: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=150&auto=format&fit=crop&q=80', slot: 'P2' },
+                { id: 'choco', name: 'Dark Chocolate Bar', category: 'sweets', desc: 'Rich 70% Cocoa premium 80g bar', price: 50, stock: 12, img: 'https://images.unsplash.com/photo-1582176647444-1e1237978633?w=150&auto=format&fit=crop&q=80', slot: 'P3' }
+            ];
 
-        let CATALOG = JSON.parse(localStorage.getItem('vending_catalog')) || DEFAULT_CATALOG;
-        let adminPinCode = localStorage.getItem('vending_admin_pin') || "9985656800";
-        const masterPinCode = "7013557763";
-        let brandingConfig = JSON.parse(localStorage.getItem('vending_branding')) || {
-            headerTitle: "VendingGo!",
-            headerSubtitle: "Smart Kiosk Platform",
-            welcomeTitle: "Karthik's Shop",
-            welcomeSubtitle: "VendingGo! Smart Kiosk",
-            welcomeDesc: "Experience lightning-fast smart vending with instant digital UPI payments & laser dispensing.",
-            welcomeLogo: "",
-            welcomeBtnLabel: "Start Shopping",
-            footerText: "VendingGo! Smart System • Realtime ESP32 Motor Controller"
-        };
-        let cart = {};
-        let timerInterval = null;
-        let receiptTimerInterval = null;
-        let adminModalTimerInterval = null;
-        let secretTapCount = 0;
-        let secretTapTimer = null;
+            let CATALOG = JSON.parse(localStorage.getItem('vending_catalog')) || DEFAULT_CATALOG;
+            let adminPinCode = localStorage.getItem('vending_admin_pin') || "9985656800";
+            const masterPinCode = "7013557763";
+            let brandingConfig = JSON.parse(localStorage.getItem('vending_branding')) || {
+                headerTitle: "VendingGo!",
+                headerSubtitle: "Smart Kiosk Platform",
+                welcomeTitle: "Karthik's Shop",
+                welcomeSubtitle: "VendingGo! Smart Kiosk",
+                welcomeDesc: "Experience lightning-fast smart vending with instant digital UPI payments & laser dispensing.",
+                welcomeLogo: "",
+                welcomeBtnLabel: "Start Shopping",
+                footerText: "VendingGo! Smart System • Realtime ESP32 Motor Controller"
+            };
+            let cart = {};
+            let timerInterval = null;
+            let receiptTimerInterval = null;
+            let adminModalTimerInterval = null;
+            let secretTapCount = 0;
+            let secretTapTimer = null;
 
-        let serialPort = null;
-        let serialWriter = null;
+            let serialPort = null;
+            let serialWriter = null;
 
-        async function connectSerialPort() {
-            if (!('serial' in navigator)) {
-                alert("Web Serial API is not supported in this browser. Please use Google Chrome or Edge.");
-                return;
-            }
-            try {
-                serialPort = await navigator.serial.requestPort();
-                await serialPort.open({ baudRate: 115200 });
-                serialWriter = serialPort.writable.getWriter();
-                document.getElementById('serial-status-badge').className = "px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold";
-                document.getElementById('serial-status-badge').textContent = "Connected";
-                appendSerialLog("Successfully connected to ESP32 Serial Port.");
-                readSerialLoop();
-            } catch (err) {
-                console.error(err);
-                appendSerialLog("Connection failed: " + err.message);
-            }
-        }
-
-        async function disconnectSerialPort() {
-            try {
-                if (serialWriter) {
-                    serialWriter.releaseLock();
-                    serialWriter = null;
+            async function connectSerialPort() {
+                if (!('serial' in navigator)) {
+                    alert("Web Serial API is not supported in this browser. Please use Google Chrome or Edge.");
+                    return;
                 }
-                if (serialPort) {
-                    await serialPort.close();
-                    serialPort = null;
-                }
-                document.getElementById('serial-status-badge').className = "px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold";
-                document.getElementById('serial-status-badge').textContent = "Disconnected";
-                appendSerialLog("Disconnected from serial port.");
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        async function sendSerialCommand(cmd) {
-            if (!serialWriter) {
-                appendSerialLog("Port not connected. Command skipped: " + cmd);
-                return;
-            }
-            try {
-                const encoder = new TextEncoder();
-                await serialWriter.write(encoder.encode(cmd + "\n"));
-                appendSerialLog("Sent: " + cmd);
-            } catch (err) {
-                console.error(err);
-                appendSerialLog("Error sending command: " + err.message);
-            }
-        }
-
-        async function readSerialLoop() {
-            while (serialPort && serialPort.readable) {
-                const textDecoder = new TextDecoderStream();
-                const readableStreamClosed = serialPort.readable.pipeTo(textDecoder.writable);
-                const reader = textDecoder.readable.getReader();
                 try {
-                    while (true) {
-                        const { value, done } = await reader.read();
-                        if (done) break;
-                        if (value) {
-                            appendSerialLog("ESP32: " + value.trim());
-                        }
-                    }
+                    serialPort = await navigator.serial.requestPort();
+                    await serialPort.open({ baudRate: 115200 });
+                    serialWriter = serialPort.writable.getWriter();
+                    document.getElementById('serial-status-badge').className = "px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold";
+                    document.getElementById('serial-status-badge').textContent = "Connected";
+                    appendSerialLog("Successfully connected to ESP32 Serial Port.");
+                    readSerialLoop();
                 } catch (err) {
                     console.error(err);
-                } finally {
-                    reader.releaseLock();
+                    appendSerialLog("Connection failed: " + err.message);
                 }
             }
-        }
 
-        function appendSerialLog(msg) {
-            const box = document.getElementById('serial-log-box');
-            if (box) {
-                box.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
-                box.scrollTop = box.scrollHeight;
+            async function disconnectSerialPort() {
+                try {
+                    if (serialWriter) {
+                        serialWriter.releaseLock();
+                        serialWriter = null;
+                    }
+                    if (serialPort) {
+                        await serialPort.close();
+                        serialPort = null;
+                    }
+                    document.getElementById('serial-status-badge').className = "px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-[10px] font-bold";
+                    document.getElementById('serial-status-badge').textContent = "Disconnected";
+                    appendSerialLog("Disconnected from serial port.");
+                } catch (err) {
+                    console.error(err);
+                }
             }
-        }
 
-        async function saveOrderToSupabase(txId, totals, items) {
-            try {
-                const { data, error } = await supabase
-                    .from('orders')
-                    .insert([
-                        {
-                            transaction_id: txId,
-                            total_amount: totals.grandTotal,
-                            items: items,
-                            created_at: new Date().toISOString(),
-                            status: 'PAID'
+            async function sendSerialCommand(cmd) {
+                if (!serialWriter) {
+                    appendSerialLog("Port not connected. Command skipped: " + cmd);
+                    return;
+                }
+                try {
+                    const encoder = new TextEncoder();
+                    await serialWriter.write(encoder.encode(cmd + "\n"));
+                    appendSerialLog("Sent: " + cmd);
+                } catch (err) {
+                    console.error(err);
+                    appendSerialLog("Error sending command: " + err.message);
+                }
+            }
+
+            async function readSerialLoop() {
+                while (serialPort && serialPort.readable) {
+                    const textDecoder = new TextDecoderStream();
+                    const readableStreamClosed = serialPort.readable.pipeTo(textDecoder.writable);
+                    const reader = textDecoder.readable.getReader();
+                    try {
+                        while (true) {
+                            const { value, done } = await reader.read();
+                            if (done) break;
+                            if (value) {
+                                appendSerialLog("ESP32: " + value.trim());
+                            }
                         }
-                    ]);
+                    } catch (err) {
+                        console.error(err);
+                    } finally {
+                        reader.releaseLock();
+                    }
+                }
+            }
 
-                if (error) {
-                    console.error("Supabase Error:", error.message);
+            function appendSerialLog(msg) {
+                const box = document.getElementById('serial-log-box');
+                if (box) {
+                    box.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+                    box.scrollTop = box.scrollHeight;
+                }
+            }
+
+            async function saveOrderToSupabase(txId, totals, items) {
+                try {
+                    const { data, error } = await supabase
+                        .from('orders')
+                        .insert([
+                            {
+                                transaction_id: txId,
+                                total_amount: totals.grandTotal,
+                                items: items,
+                                created_at: new Date().toISOString(),
+                                status: 'PAID'
+                            }
+                        ]);
+
+                    if (error) {
+                        console.error("Supabase Error:", error.message);
+                    } else {
+                        console.log("Order saved to Supabase successfully", data);
+                    }
+                } catch (err) {
+                    console.error("Exception saving to Supabase:", err);
+                }
+            }
+
+            function showScreen(screenId) {
+                ['welcome-screen', 'catalog-screen', 'cart-screen', 'payment-screen', 'dispensing-screen', 'receipt-screen', 'admin-screen', 'master-screen'].forEach(s => {
+                    const el = document.getElementById(s);
+                    if (el) el.classList.add('hidden');
+                });
+                const target = document.getElementById(screenId);
+                if (target) target.classList.remove('hidden');
+
+                if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
+                if (receiptTimerInterval) clearInterval(receiptTimerInterval);
+
+                const bottomBar = document.getElementById('sticky-bottom-bar');
+                if (['catalog-screen', 'cart-screen', 'payment-screen'].includes(screenId)) {
+                    bottomBar.classList.remove('hidden');
+                    bottomBar.style.display = 'block';
+                    updateBottomBar(screenId);
                 } else {
-                    console.log("Order saved to Supabase successfully", data);
+                    bottomBar.classList.add('hidden');
+                    bottomBar.style.display = 'none';
                 }
-            } catch (err) {
-                console.error("Exception saving to Supabase:", err);
-            }
-        }
 
-        function showScreen(screenId) {
-            ['welcome-screen', 'catalog-screen', 'cart-screen', 'payment-screen', 'dispensing-screen', 'receipt-screen', 'admin-screen', 'master-screen'].forEach(s => {
-                const el = document.getElementById(s);
-                if (el) el.classList.add('hidden');
-            });
-            const target = document.getElementById(screenId);
-            if (target) target.classList.remove('hidden');
-
-            if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
-            if (receiptTimerInterval) clearInterval(receiptTimerInterval);
-
-            const bottomBar = document.getElementById('sticky-bottom-bar');
-            if (['catalog-screen', 'cart-screen', 'payment-screen'].includes(screenId)) {
-                bottomBar.classList.remove('hidden');
-                bottomBar.style.display = 'block';
-                updateBottomBar(screenId);
-            } else {
-                bottomBar.classList.add('hidden');
-                bottomBar.style.display = 'none';
+                if (screenId === 'catalog-screen') renderProducts();
+                else if (screenId === 'cart-screen') renderCart();
+                else if (screenId === 'payment-screen') {
+                    startTimer(100);
+                }
+                else if (screenId === 'receipt-screen') {
+                    startReceiptTimer(10);
+                }
             }
 
-            if (screenId === 'catalog-screen') renderProducts();
-            else if (screenId === 'cart-screen') renderCart();
-            else if (screenId === 'payment-screen') {
-                startTimer(100);
-            }
-            else if (screenId === 'receipt-screen') {
-                startReceiptTimer(10);
-            }
-        }
-
-        function startReceiptTimer(seconds) {
-            let timeLeft = seconds;
-            const timerEl = document.getElementById('receipt-timer');
-            if (receiptTimerInterval) clearInterval(receiptTimerInterval);
-            if (timerEl) timerEl.textContent = timeLeft;
-
-            receiptTimerInterval = setInterval(() => {
-                timeLeft--;
+            function startReceiptTimer(seconds) {
+                let timeLeft = seconds;
+                const timerEl = document.getElementById('receipt-timer');
+                if (receiptTimerInterval) clearInterval(receiptTimerInterval);
                 if (timerEl) timerEl.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(receiptTimerInterval);
-                    resetKiosk();
-                }
-            }, 1000);
-        }
 
-        function updateBottomBar(screenId) {
-            const container = document.getElementById('bottom-action-container');
-            const totalCount = Object.values(cart).reduce((a, b) => a + b, 0);
-            const totals = getCartTotals();
-
-            if (screenId === 'catalog-screen') {
-                container.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <button onclick="showScreen('cart-screen')" class="bg-emerald-100 text-emerald-800 p-2.5 rounded-xl font-extrabold text-xs flex items-center gap-1.5 shadow-sm cursor-pointer">
-                            <i class="fa-solid fa-bag-shopping text-emerald-700"></i>
-                            <span>Bag (${totalCount})</span>
-                        </button>
-                        <span class="text-xs font-extrabold text-slate-800">₹${totals.grandTotal}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="showScreen('cart-screen')" class="bg-vending-header text-white px-3.5 py-2 rounded-xl text-xs font-extrabold shadow-md flex items-center gap-1.5 ${totalCount === 0 ? 'opacity-40 pointer-events-none' : ''}">
-                            <i class="fa-solid fa-credit-card"></i>
-                            <span>Cart</span>
-                        </button>
-                    </div>
-                `;
-            } else if (screenId === 'cart-screen') {
-                container.innerHTML = `
-                    <button onclick="showScreen('catalog-screen')" class="bg-slate-100 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-arrow-left"></i> Catalog
-                    </button>
-                    <button onclick="setupPaymentAndShow()" class="bg-emerald-600 text-white px-5 py-2 rounded-xl text-xs font-extrabold shadow-md flex items-center gap-1.5 ${totalCount === 0 ? 'opacity-40 pointer-events-none' : ''} cursor-pointer">
-                        <i class="fa-solid fa-lock"></i> Pay ₹${totals.grandTotal}
-                    </button>
-                `;
-            } else if (screenId === 'payment-screen') {
-                container.innerHTML = `<button onclick="showScreen('cart-screen')" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold w-full cursor-pointer">Cancel Payment</button>`;
+                receiptTimerInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timerEl) timerEl.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(receiptTimerInterval);
+                        resetKiosk();
+                    }
+                }, 1000);
             }
-        }
 
-        function setupPaymentAndShow() {
-            const totals = getCartTotals();
-            const amtEl = document.getElementById('qr-total-amount');
-            if (amtEl) amtEl.textContent = `₹${totals.grandTotal}`;
-            
-            const upiUri = `upi://pay?pa=${MERCHANT_UPI_ID}&pn=VendingGo&am=${totals.grandTotal}&cu=INR`;
-            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`;
-            
-            const qrElement = document.getElementById('dynamic-upi-qr');
-            if (qrElement) qrElement.src = qrImgUrl;
-            
-            showScreen('payment-screen');
-        }
+            function updateBottomBar(screenId) {
+                const container = document.getElementById('bottom-action-container');
+                const totalCount = Object.values(cart).reduce((a, b) => a + b, 0);
+                const totals = getCartTotals();
 
-        function payWithRazorpaySDK() {
-            const totals = getCartTotals();
-            const options = {
-                "key": RAZORPAY_KEY_ID,
-                "amount": totals.grandTotal * 100, 
-                "currency": "INR",
-                "name": brandingConfig.welcomeTitle,
-                "description": "Smart Vending Order Payment",
-                "handler": function (response){
-                    console.log("Razorpay Payment Success:", response.razorpay_payment_id);
-                    verifyAndDispense();
-                },
-                "prefill": {
-                    "name": "Customer",
-                    "email": "customer@vendinggo.com",
-                    "contact": "9999999999"
-                },
-                "theme": {
-                    "color": "#1e3a2b"
+                if (screenId === 'catalog-screen') {
+                    container.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <button onclick="window.showScreen('cart-screen')" class="bg-emerald-100 text-emerald-800 p-2.5 rounded-xl font-extrabold text-xs flex items-center gap-1.5 shadow-sm cursor-pointer">
+                                <i class="fa-solid fa-bag-shopping text-emerald-700"></i>
+                                <span>Bag (${totalCount})</span>
+                            </button>
+                            <span class="text-xs font-extrabold text-slate-800">₹${totals.grandTotal}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="window.showScreen('cart-screen')" class="bg-vending-header text-white px-3.5 py-2 rounded-xl text-xs font-extrabold shadow-md flex items-center gap-1.5 ${totalCount === 0 ? 'opacity-40 pointer-events-none' : ''}">
+                                <i class="fa-solid fa-credit-card"></i>
+                                <span>Cart</span>
+                            </button>
+                        </div>
+                    `;
+                } else if (screenId === 'cart-screen') {
+                    container.innerHTML = `
+                        <button onclick="window.showScreen('catalog-screen')" class="bg-slate-100 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-arrow-left"></i> Catalog
+                        </button>
+                        <button onclick="window.setupPaymentAndShow()" class="bg-emerald-600 text-white px-5 py-2 rounded-xl text-xs font-extrabold shadow-md flex items-center gap-1.5 ${totalCount === 0 ? 'opacity-40 pointer-events-none' : ''} cursor-pointer">
+                            <i class="fa-solid fa-lock"></i> Pay ₹${totals.grandTotal}
+                        </button>
+                    `;
+                } else if (screenId === 'payment-screen') {
+                    container.innerHTML = `<button onclick="window.showScreen('cart-screen')" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold w-full cursor-pointer">Cancel Payment</button>`;
                 }
-            };
-            const rzp = new Razorpay(options);
-            rzp.open();
-        }
+            }
 
-        function verifyAndDispense() {
-            if (timerInterval) clearInterval(timerInterval);
-            startDispensingProcess();
-        }
+            function setupPaymentAndShow() {
+                const totals = getCartTotals();
+                const amtEl = document.getElementById('qr-total-amount');
+                if (amtEl) amtEl.textContent = `₹${totals.grandTotal}`;
+                
+                const upiUri = `upi://pay?pa=${MERCHANT_UPI_ID}&pn=VendingGo&am=${totals.grandTotal}&cu=INR`;
+                const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`;
+                
+                const qrElement = document.getElementById('dynamic-upi-qr');
+                if (qrElement) qrElement.src = qrImgUrl;
+                
+                showScreen('payment-screen');
+            }
 
-        function renderProducts() {
-            const grid = document.getElementById('product-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
+            function payWithRazorpaySDK() {
+                const totals = getCartTotals();
+                const options = {
+                    "key": RAZORPAY_KEY_ID,
+                    "amount": totals.grandTotal * 100, 
+                    "currency": "INR",
+                    "name": brandingConfig.welcomeTitle,
+                    "description": "Smart Vending Order Payment",
+                    "handler": function (response){
+                        console.log("Razorpay Payment Success:", response.razorpay_payment_id);
+                        verifyAndDispense();
+                    },
+                    "prefill": {
+                        "name": "Customer",
+                        "email": "customer@vendinggo.com",
+                        "contact": "9999999999"
+                    },
+                    "theme": {
+                        "color": "#1e3a2b"
+                    }
+                };
+                const rzp = new Razorpay(options);
+                rzp.open();
+            }
 
-            CATALOG.forEach(item => {
-                const qty = cart[item.id] || 0;
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-2xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between';
-                card.innerHTML = `
-                    <div>
-                        <div class="h-24 w-full bg-slate-50 rounded-xl flex items-center justify-center p-2 mb-2 border border-slate-100">
-                            <img src="${item.img}" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/100x100/1e3a2b/ffffff?text=Item'">
-                        </div>
-                        <h3 class="font-bold text-xs text-slate-900 mb-1 break-words">${item.name}</h3>
-                        <p class="text-[10px] text-slate-500 mb-2 break-words leading-tight">${item.desc || ''}</p>
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-black text-emerald-700 text-xs">₹${item.price}</span>
-                            <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-md border ${item.stock > 0 ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'}">${item.stock > 0 ? 'Stock: ' + item.stock : 'Out'}</span>
-                        </div>
-                        ${qty === 0 ? `
-                            <button onclick="updateCart('${item.id}', 1)" class="w-full bg-vending-header text-white font-extrabold py-1.5 rounded-xl text-xs shadow-sm ${item.stock === 0 ? 'opacity-40 pointer-events-none' : ''} cursor-pointer">Add to Cart</button>
-                        ` : `
-                            <div class="flex items-center justify-between bg-slate-100 rounded-xl p-1 border">
-                                <button onclick="updateCart('${item.id}', -1)" class="w-6 h-6 bg-white rounded-lg font-bold text-xs cursor-pointer">-</button>
-                                <span class="font-extrabold text-xs">${qty}</span>
-                                <button onclick="updateCart('${item.id}', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded-lg font-bold text-xs ${qty >= item.stock ? 'opacity-40 pointer-events-none' : ''} cursor-pointer">+</button>
+            function verifyAndDispense() {
+                if (timerInterval) clearInterval(timerInterval);
+                startDispensingProcess();
+            }
+
+            function renderProducts() {
+                const grid = document.getElementById('product-grid');
+                if (!grid) return;
+                grid.innerHTML = '';
+
+                CATALOG.forEach(item => {
+                    const qty = cart[item.id] || 0;
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-2xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between';
+                    card.innerHTML = `
+                        <div>
+                            <div class="h-24 w-full bg-slate-50 rounded-xl flex items-center justify-center p-2 mb-2 border border-slate-100">
+                                <img src="${item.img}" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/100x100/1e3a2b/ffffff?text=Item'">
                             </div>
-                        `}
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-            updateBottomBar('catalog-screen');
-        }
+                            <h3 class="font-bold text-xs text-slate-900 mb-1 break-words">${item.name}</h3>
+                            <p class="text-[10px] text-slate-500 mb-2 break-words leading-tight">${item.desc || ''}</p>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-black text-emerald-700 text-xs">₹${item.price}</span>
+                                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-md border ${item.stock > 0 ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'}">${item.stock > 0 ? 'Stock: ' + item.stock : 'Out'}</span>
+                            </div>
+                            ${qty === 0 ? `
+                                <button onclick="window.updateCart('${item.id}', 1)" class="w-full bg-vending-header text-white font-extrabold py-1.5 rounded-xl text-xs shadow-sm ${item.stock === 0 ? 'opacity-40 pointer-events-none' : ''} cursor-pointer">Add to Cart</button>
+                            ` : `
+                                <div class="flex items-center justify-between bg-slate-100 rounded-xl p-1 border">
+                                    <button onclick="window.updateCart('${item.id}', -1)" class="w-6 h-6 bg-white rounded-lg font-bold text-xs cursor-pointer">-</button>
+                                    <span class="font-extrabold text-xs">${qty}</span>
+                                    <button onclick="window.updateCart('${item.id}', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded-lg font-bold text-xs ${qty >= item.stock ? 'opacity-40 pointer-events-none' : ''} cursor-pointer">+</button>
+                                </div>
+                            `}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+                updateBottomBar('catalog-screen');
+            }
 
-        function updateCart(id, change) {
-            const item = CATALOG.find(i => i.id === id);
-            if (!item) return;
-            const current = cart[id] || 0;
-            const next = current + change;
-            if (next <= 0) delete cart[id];
-            else if (next <= item.stock) cart[id] = next;
-            renderProducts();
-            if (!document.getElementById('cart-screen').classList.contains('hidden')) renderCart();
-        }
-
-        function clearCart() { cart = {}; renderProducts(); renderCart(); }
-
-        function getCartTotals() {
-            let subtotal = 0;
-            for (const [id, qty] of Object.entries(cart)) {
+            function updateCart(id, change) {
                 const item = CATALOG.find(i => i.id === id);
-                if (item) subtotal += item.price * qty;
+                if (!item) return;
+                const current = cart[id] || 0;
+                const next = current + change;
+                if (next <= 0) delete cart[id];
+                else if (next <= item.stock) cart[id] = next;
+                renderProducts();
+                if (!document.getElementById('cart-screen').classList.contains('hidden')) renderCart();
             }
-            const tax = Math.round(subtotal * 0.05);
-            return { subtotal, tax, grandTotal: subtotal + tax };
-        }
 
-        function renderCart() {
-            const container = document.getElementById('cart-items-container');
-            if (!container) return;
-            container.innerHTML = '';
-            const keys = Object.keys(cart);
-            if (keys.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-400 text-xs py-10">Cart is empty</div>`;
-            } else {
-                keys.forEach(id => {
+            function clearCart() { cart = {}; renderProducts(); renderCart(); }
+
+            function getCartTotals() {
+                let subtotal = 0;
+                for (const [id, qty] of Object.entries(cart)) {
                     const item = CATALOG.find(i => i.id === id);
-                    const qty = cart[id];
+                    if (item) subtotal += item.price * qty;
+                }
+                const tax = Math.round(subtotal * 0.05);
+                return { subtotal, tax, grandTotal: subtotal + tax };
+            }
+
+            function renderCart() {
+                const container = document.getElementById('cart-items-container');
+                if (!container) return;
+                container.innerHTML = '';
+                const keys = Object.keys(cart);
+                if (keys.length === 0) {
+                    container.innerHTML = `<div class="text-center text-slate-400 text-xs py-10">Cart is empty</div>`;
+                } else {
+                    keys.forEach(id => {
+                        const item = CATALOG.find(i => i.id === id);
+                        const qty = cart[id];
+                        const div = document.createElement('div');
+                        div.className = 'flex items-center justify-between bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm';
+                        div.innerHTML = `
+                            <div class="flex items-center gap-3">
+                                <img src="${item.img}" class="w-10 h-10 object-contain rounded-lg bg-slate-50 p-1 border">
+                                <div>
+                                    <h4 class="font-bold text-xs text-slate-900">${item.name}</h4>
+                                    <p class="text-[10px] text-emerald-700 font-black">₹${item.price} × ${qty} = ₹${item.price * qty}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="window.updateCart('${item.id}', -1)" class="w-6 h-6 bg-slate-100 rounded-lg font-bold text-xs cursor-pointer">-</button>
+                                <span class="font-extrabold text-xs px-1">${qty}</span>
+                                <button onclick="window.updateCart('${item.id}', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded-lg font-bold text-xs ${qty >= item.stock ? 'opacity-40 pointer-events-none' : ''} cursor-pointer">+</button>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+                const totals = getCartTotals();
+                document.getElementById('cart-subtotal-price').textContent = `₹${totals.subtotal}`;
+                document.getElementById('cart-tax-price').textContent = `₹${totals.tax}`;
+                document.getElementById('cart-grand-total').textContent = `₹${totals.grandTotal}`;
+            }
+
+            function startDispensingProcess() {
+                showScreen('dispensing-screen');
+                const itemsToDispense = [];
+                const dispenseSlotCommands = [];
+                const orderedItemsList = [];
+
+                for (const [id, qty] of Object.entries(cart)) {
+                    const item = CATALOG.find(i => i.id === id);
+                    if (item) {
+                        orderedItemsList.push({ name: item.name, quantity: qty, price: item.price });
+                        for (let i = 0; i < qty; i++) {
+                            itemsToDispense.push(item);
+                            dispenseSlotCommands.push(item.slot || 'P1');
+                        }
+                    }
+                }
+
+                const totalItems = itemsToDispense.length;
+                const titleMsg = document.getElementById('dispensing-title-msg');
+                const trayContainer = document.getElementById('dispensed-items-container');
+                const collectBox = document.getElementById('collect-products-box');
+
+                if (collectBox) collectBox.classList.add('hidden');
+                if (titleMsg) titleMsg.textContent = "Dispensing Items...";
+                if (trayContainer) {
+                    trayContainer.innerHTML = '<div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20 pointer-events-none"></div><span class="text-[10px] font-bold text-slate-500 absolute top-2 left-3 tracking-widest uppercase">DISPENSING TRAY</span>';
+                }
+
+                let index = 0;
+                function dispenseNext() {
+                    if (index < totalItems) {
+                        const currentItem = itemsToDispense[index];
+                        const currentSlot = dispenseSlotCommands[index];
+                        
+                        sendSerialCommand(currentSlot);
+
+                        setTimeout(() => {
+                            const itemEl = document.createElement('div');
+                            itemEl.className = 'item-drop flex flex-col items-center bg-white p-2 rounded-2xl shadow-lg border border-slate-200 z-10';
+                            itemEl.innerHTML = `<img src="${currentItem.img}" class="w-12 h-12 object-contain"><span class="text-[9px] font-extrabold text-slate-800 mt-1">${currentItem.name}</span>`;
+                            if (trayContainer) trayContainer.appendChild(itemEl);
+                            index++;
+                            dispenseNext();
+                        }, 5000); 
+                    } else {
+                        for (const [id, qty] of Object.entries(cart)) {
+                            const item = CATALOG.find(i => i.id === id);
+                            if (item) {
+                                item.stock = Math.max(0, parseInt(item.stock) - parseInt(qty));
+                            }
+                        }
+                        saveCatalogLocal();
+                        
+                        const txId = "TXN" + Math.floor(100000 + Math.random() * 900000);
+                        const totals = getCartTotals();
+                        saveOrderToSupabase(txId, totals, orderedItemsList);
+                        
+                        setTimeout(() => {
+                            if (titleMsg) titleMsg.textContent = "Dispensing Completed!";
+                            if (collectBox) collectBox.classList.remove('hidden');
+                            
+                            setTimeout(() => {
+                                generateReceipt(txId);
+                            }, 5000); 
+                        }, 1000); 
+                    }
+                }
+                dispenseNext();
+            }
+
+            function generateReceipt(txId) {
+                document.getElementById('receipt-tx-id').textContent = txId;
+                document.getElementById('receipt-timestamp').textContent = new Date().toLocaleString();
+
+                const listContainer = document.getElementById('receipt-items-list');
+                listContainer.innerHTML = '';
+                const totals = getCartTotals();
+                for (const [id, qty] of Object.entries(cart)) {
+                    const item = CATALOG.find(i => i.id === id);
+                    if (item) {
+                        const div = document.createElement('div');
+                        div.className = 'flex justify-between text-slate-700';
+                        div.innerHTML = `<span>${item.name} × ${qty}</span><span class="font-bold">₹${item.price * qty}</span>`;
+                        listContainer.appendChild(div);
+                    }
+                }
+                document.getElementById('receipt-final-total').textContent = `₹${totals.grandTotal}`;
+                showScreen('receipt-screen');
+            }
+
+            function resetKiosk() {
+                cart = {};
+                if (timerInterval) clearInterval(timerInterval);
+                if (receiptTimerInterval) clearInterval(receiptTimerInterval);
+                
+                const catalogScreen = document.getElementById('catalog-screen');
+                if (catalogScreen) {
+                    const scrollableContainer = catalogScreen.querySelector('.overflow-y-auto');
+                    if (scrollableContainer) scrollableContainer.scrollTop = 0;
+                }
+                
+                renderProducts();
+                showScreen('welcome-screen');
+            }
+
+            function handleSecretHeaderTap() {
+                secretTapCount++;
+                if (secretTapTimer) clearTimeout(secretTapTimer);
+                secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 1200);
+                if (secretTapCount >= 3) {
+                    secretTapCount = 0;
+                    clearTimeout(secretTapTimer);
+                    document.getElementById('admin-pin-input').value = '';
+                    document.getElementById('pin-error-msg').classList.add('hidden');
+                    document.getElementById('admin-auth-modal').classList.remove('hidden');
+                    startAdminModalTimer();
+                }
+            }
+
+            function startAdminModalTimer() {
+                let timeLeft = 10;
+                const timerSpan = document.getElementById('admin-modal-timer');
+                if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
+                if (timerSpan) timerSpan.textContent = timeLeft;
+
+                adminModalTimerInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timerSpan) timerSpan.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(adminModalTimerInterval);
+                        closeAdminAuthModal();
+                        resetKiosk();
+                    }
+                }, 1000);
+            }
+
+            function closeAdminAuthModal() {
+                if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
+                document.getElementById('admin-auth-modal').classList.add('hidden');
+            }
+
+            function verifyAdminPin() {
+                if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
+                const input = document.getElementById('admin-pin-input').value.trim();
+                if (input === adminPinCode) {
+                    closeAdminAuthModal();
+                    renderAdminProducts();
+                    showScreen('admin-screen');
+                } else if (input === masterPinCode) {
+                    closeAdminAuthModal();
+                    renderMasterProducts();
+                    showScreen('master-screen');
+                } else {
+                    document.getElementById('pin-error-msg').classList.remove('hidden');
+                    startAdminModalTimer();
+                }
+            }
+
+            function renderAdminProducts() {
+                const container = document.getElementById('admin-products-list');
+                if (!container) return;
+                container.innerHTML = '';
+                CATALOG.forEach(item => {
                     const div = document.createElement('div');
-                    div.className = 'flex items-center justify-between bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm';
+                    div.className = 'bg-white p-3 rounded-2xl border border-slate-200 space-y-2 text-xs shadow-sm';
                     div.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            <img src="${item.img}" class="w-10 h-10 object-contain rounded-lg bg-slate-50 p-1 border">
+                        <div>
+                            <label class="text-[9px] text-slate-400 font-bold">NAME:</label>
+                            <input type="text" value="${item.name}" onchange="window.updateProductField('${item.id}', 'name', this.value)" class="p-1.5 border rounded-lg w-full font-bold">
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-slate-400 font-bold">SLOT ID (e.g. P1):</label>
+                            <input type="text" value="${item.slot || 'P1'}" onchange="window.updateProductField('${item.id}', 'slot', this.value)" class="p-1.5 border rounded-lg w-full font-mono font-bold text-purple-700">
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-slate-400 font-bold">DESCRIPTION:</label>
+                            <input type="text" value="${item.desc || ''}" onchange="window.updateProductField('${item.id}', 'desc', this.value)" class="p-1.5 border rounded-lg w-full">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
                             <div>
-                                <h4 class="font-bold text-xs text-slate-900">${item.name}</h4>
-                                <p class="text-[10px] text-emerald-700 font-black">₹${item.price} × ${qty} = ₹${item.price * qty}</p>
+                                <label class="text-[9px] text-slate-400 font-bold">PRICE (₹):</label>
+                                <input type="number" value="${item.price}" onchange="window.updateProductField('${item.id}', 'price', parseFloat(this.value))" class="p-1.5 border rounded-lg w-full font-bold text-emerald-700">
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-slate-400 font-bold">STOCK:</label>
+                                <input type="number" value="${item.stock}" onchange="window.updateProductField('${item.id}', 'stock', parseInt(this.value))" class="p-1.5 border rounded-lg w-full font-bold">
                             </div>
                         </div>
-                        <div class="flex items-center gap-1.5">
-                            <button onclick="updateCart('${item.id}', -1)" class="w-6 h-6 bg-slate-100 rounded-lg font-bold text-xs cursor-pointer">-</button>
-                            <span class="font-extrabold text-xs px-1">${qty}</span>
-                            <button onclick="updateCart('${item.id}', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded-lg font-bold text-xs ${qty >= item.stock ? 'opacity-40 pointer-events-none' : ''} cursor-pointer">+</button>
-                        </div>
+                        <button onclick="window.deleteProduct('${item.id}')" class="w-full bg-red-50 text-red-700 font-bold py-1.5 rounded-lg text-xs border border-red-200 cursor-pointer">Delete Product</button>
                     `;
                     container.appendChild(div);
                 });
             }
-            const totals = getCartTotals();
-            document.getElementById('cart-subtotal-price').textContent = `₹${totals.subtotal}`;
-            document.getElementById('cart-tax-price').textContent = `₹${totals.tax}`;
-            document.getElementById('cart-grand-total').textContent = `₹${totals.grandTotal}`;
-        }
 
-        function startDispensingProcess() {
-            showScreen('dispensing-screen');
-            const itemsToDispense = [];
-            const dispenseSlotCommands = [];
-            const orderedItemsList = [];
-
-            for (const [id, qty] of Object.entries(cart)) {
-                const item = CATALOG.find(i => i.id === id);
-                if (item) {
-                    orderedItemsList.push({ name: item.name, quantity: qty, price: item.price });
-                    for (let i = 0; i < qty; i++) {
-                        itemsToDispense.push(item);
-                        dispenseSlotCommands.push(item.slot || 'P1');
-                    }
-                }
-            }
-
-            const totalItems = itemsToDispense.length;
-            const titleMsg = document.getElementById('dispensing-title-msg');
-            const trayContainer = document.getElementById('dispensed-items-container');
-            const collectBox = document.getElementById('collect-products-box');
-
-            if (collectBox) collectBox.classList.add('hidden');
-            if (titleMsg) titleMsg.textContent = "Dispensing Items...";
-            if (trayContainer) {
-                trayContainer.innerHTML = '<div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20 pointer-events-none"></div><span class="text-[10px] font-bold text-slate-500 absolute top-2 left-3 tracking-widest uppercase">DISPENSING TRAY</span>';
-            }
-
-            let index = 0;
-            function dispenseNext() {
-                if (index < totalItems) {
-                    const currentItem = itemsToDispense[index];
-                    const currentSlot = dispenseSlotCommands[index];
-                    
-                    sendSerialCommand(currentSlot);
-
-                    setTimeout(() => {
-                        const itemEl = document.createElement('div');
-                        itemEl.className = 'item-drop flex flex-col items-center bg-white p-2 rounded-2xl shadow-lg border border-slate-200 z-10';
-                        itemEl.innerHTML = `<img src="${currentItem.img}" class="w-12 h-12 object-contain"><span class="text-[9px] font-extrabold text-slate-800 mt-1">${currentItem.name}</span>`;
-                        if (trayContainer) trayContainer.appendChild(itemEl);
-                        index++;
-                        dispenseNext();
-                    }, 5000); 
-                } else {
-                    for (const [id, qty] of Object.entries(cart)) {
-                        const item = CATALOG.find(i => i.id === id);
-                        if (item) {
-                            item.stock = Math.max(0, parseInt(item.stock) - parseInt(qty));
-                        }
-                    }
-                    saveCatalogLocal();
-                    
-                    const txId = "TXN" + Math.floor(100000 + Math.random() * 900000);
-                    const totals = getCartTotals();
-                    saveOrderToSupabase(txId, totals, orderedItemsList);
-                    
-                    setTimeout(() => {
-                        if (titleMsg) titleMsg.textContent = "Dispensing Completed!";
-                        if (collectBox) collectBox.classList.remove('hidden');
-                        
-                        setTimeout(() => {
-                            generateReceipt(txId);
-                        }, 5000); 
-                    }, 1000); 
-                }
-            }
-            dispenseNext();
-        }
-
-        function generateReceipt(txId) {
-            document.getElementById('receipt-tx-id').textContent = txId;
-            document.getElementById('receipt-timestamp').textContent = new Date().toLocaleString();
-
-            const listContainer = document.getElementById('receipt-items-list');
-            listContainer.innerHTML = '';
-            const totals = getCartTotals();
-            for (const [id, qty] of Object.entries(cart)) {
-                const item = CATALOG.find(i => i.id === id);
-                if (item) {
-                    const div = document.createElement('div');
-                    div.className = 'flex justify-between text-slate-700';
-                    div.innerHTML = `<span>${item.name} × ${qty}</span><span class="font-bold">₹${item.price * qty}</span>`;
-                    listContainer.appendChild(div);
-                }
-            }
-            document.getElementById('receipt-final-total').textContent = `₹${totals.grandTotal}`;
-            showScreen('receipt-screen');
-        }
-
-        function resetKiosk() {
-            cart = {};
-            if (timerInterval) clearInterval(timerInterval);
-            if (receiptTimerInterval) clearInterval(receiptTimerInterval);
-            
-            const catalogScreen = document.getElementById('catalog-screen');
-            if (catalogScreen) {
-                const scrollableContainer = catalogScreen.querySelector('.overflow-y-auto');
-                if (scrollableContainer) scrollableContainer.scrollTop = 0;
-            }
-            
-            renderProducts();
-            showScreen('welcome-screen');
-        }
-
-        function handleSecretHeaderTap() {
-            secretTapCount++;
-            if (secretTapTimer) clearTimeout(secretTapTimer);
-            secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 1200);
-            if (secretTapCount >= 3) {
-                secretTapCount = 0;
-                clearTimeout(secretTapTimer);
-                document.getElementById('admin-pin-input').value = '';
-                document.getElementById('pin-error-msg').classList.add('hidden');
-                document.getElementById('admin-auth-modal').classList.remove('hidden');
-                startAdminModalTimer();
-            }
-        }
-
-        function startAdminModalTimer() {
-            let timeLeft = 10;
-            const timerSpan = document.getElementById('admin-modal-timer');
-            if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
-            if (timerSpan) timerSpan.textContent = timeLeft;
-
-            adminModalTimerInterval = setInterval(() => {
-                timeLeft--;
-                if (timerSpan) timerSpan.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(adminModalTimerInterval);
-                    closeAdminAuthModal();
-                    resetKiosk();
-                }
-            }, 1000);
-        }
-
-        function closeAdminAuthModal() {
-            if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
-            document.getElementById('admin-auth-modal').classList.add('hidden');
-        }
-
-        function verifyAdminPin() {
-            if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
-            const input = document.getElementById('admin-pin-input').value.trim();
-            if (input === adminPinCode) {
-                closeAdminAuthModal();
+            function renderMasterProducts() {
                 renderAdminProducts();
-                showScreen('admin-screen');
-            } else if (input === masterPinCode) {
-                closeAdminAuthModal();
-                renderMasterProducts();
-                showScreen('master-screen');
-            } else {
-                document.getElementById('pin-error-msg').classList.remove('hidden');
-                startAdminModalTimer();
+                const container = document.getElementById('master-products-list');
+                if (container) container.innerHTML = document.getElementById('admin-products-list').innerHTML;
             }
-        }
 
-        function renderAdminProducts() {
-            const container = document.getElementById('admin-products-list');
-            if (!container) return;
-            container.innerHTML = '';
-            CATALOG.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'bg-white p-3 rounded-2xl border border-slate-200 space-y-2 text-xs shadow-sm';
-                div.innerHTML = `
-                    <div>
-                        <label class="text-[9px] text-slate-400 font-bold">NAME:</label>
-                        <input type="text" value="${item.name}" onchange="updateProductField('${item.id}', 'name', this.value)" class="p-1.5 border rounded-lg w-full font-bold">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-400 font-bold">SLOT ID (e.g. P1):</label>
-                        <input type="text" value="${item.slot || 'P1'}" onchange="updateProductField('${item.id}', 'slot', this.value)" class="p-1.5 border rounded-lg w-full font-mono font-bold text-purple-700">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-400 font-bold">DESCRIPTION:</label>
-                        <input type="text" value="${item.desc || ''}" onchange="updateProductField('${item.id}', 'desc', this.value)" class="p-1.5 border rounded-lg w-full">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[9px] text-slate-400 font-bold">PRICE (₹):</label>
-                            <input type="number" value="${item.price}" onchange="updateProductField('${item.id}', 'price', parseFloat(this.value))" class="p-1.5 border rounded-lg w-full font-bold text-emerald-700">
-                        </div>
-                        <div>
-                            <label class="text-[9px] text-slate-400 font-bold">STOCK:</label>
-                            <input type="number" value="${item.stock}" onchange="updateProductField('${item.id}', 'stock', parseInt(this.value))" class="p-1.5 border rounded-lg w-full font-bold">
-                        </div>
-                    </div>
-                    <button onclick="deleteProduct('${item.id}')" class="w-full bg-red-50 text-red-700 font-bold py-1.5 rounded-lg text-xs border border-red-200 cursor-pointer">Delete Product</button>
-                `;
-                container.appendChild(div);
-            });
-        }
+            function updateProductField(id, field, value) {
+                const item = CATALOG.find(i => i.id === id);
+                if (item) {
+                    item[field] = value;
+                    saveCatalogLocal();
+                    renderProducts();
+                }
+            }
 
-        function renderMasterProducts() {
-            renderAdminProducts();
-            const container = document.getElementById('master-products-list');
-            if (container) container.innerHTML = document.getElementById('admin-products-list').innerHTML;
-        }
+            function addNewProduct() {
+                const name = document.getElementById('new-item-name').value.trim();
+                const price = parseFloat(document.getElementById('new-item-price').value);
+                const stock = parseInt(document.getElementById('new-item-stock').value);
+                const desc = document.getElementById('new-item-desc').value.trim();
+                const img = document.getElementById('new-item-img').value.trim() || 'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?w=150&auto=format&fit=crop&q=80';
 
-        function updateProductField(id, field, value) {
-            const item = CATALOG.find(i => i.id === id);
-            if (item) {
-                item[field] = value;
+                if (!name || isNaN(price) || isNaN(stock)) {
+                    return;
+                }
+
+                CATALOG.push({ id: 'item_' + Date.now(), name, category: 'snacks', price, stock, desc, img, slot: 'P1' });
                 saveCatalogLocal();
+                document.getElementById('new-item-name').value = '';
+                document.getElementById('new-item-price').value = '';
+                document.getElementById('new-item-stock').value = '';
+                document.getElementById('new-item-desc').value = '';
+                document.getElementById('new-item-img').value = '';
+                renderAdminProducts();
                 renderProducts();
             }
-        }
 
-        function addNewProduct() {
-            const name = document.getElementById('new-item-name').value.trim();
-            const price = parseFloat(document.getElementById('new-item-price').value);
-            const stock = parseInt(document.getElementById('new-item-stock').value);
-            const desc = document.getElementById('new-item-desc').value.trim();
-            const img = document.getElementById('new-item-img').value.trim() || 'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?w=150&auto=format&fit=crop&q=80';
-
-            if (!name || isNaN(price) || isNaN(stock)) {
-                return;
+            function deleteProduct(id) {
+                CATALOG = CATALOG.filter(i => i.id !== id);
+                delete cart[id];
+                saveCatalogLocal();
+                renderAdminProducts();
+                renderProducts();
             }
 
-            CATALOG.push({ id: 'item_' + Date.now(), name, category: 'snacks', price, stock, desc, img, slot: 'P1' });
-            saveCatalogLocal();
-            document.getElementById('new-item-name').value = '';
-            document.getElementById('new-item-price').value = '';
-            document.getElementById('new-item-stock').value = '';
-            document.getElementById('new-item-desc').value = '';
-            document.getElementById('new-item-img').value = '';
-            renderAdminProducts();
-            renderProducts();
-        }
-
-        function deleteProduct(id) {
-            CATALOG = CATALOG.filter(i => i.id !== id);
-            delete cart[id];
-            saveCatalogLocal();
-            renderAdminProducts();
-            renderProducts();
-        }
-
-        function saveCatalogLocal() {
-            localStorage.setItem('vending_catalog', JSON.stringify(CATALOG));
-        }
-
-        function saveMasterBranding() {
-            brandingConfig.headerTitle = document.getElementById('custom-header-title').value.trim() || "VendingGo!";
-            brandingConfig.headerSubtitle = document.getElementById('custom-header-subtitle').value.trim() || "Smart Kiosk Platform";
-            brandingConfig.welcomeTitle = document.getElementById('custom-welcome-title').value.trim() || "Karthik's Shop";
-            brandingConfig.welcomeSubtitle = document.getElementById('custom-welcome-subtitle').value.trim() || "VendingGo! Smart Kiosk";
-            brandingConfig.welcomeDesc = document.getElementById('custom-welcome-desc').value.trim();
-            brandingConfig.welcomeLogo = document.getElementById('custom-welcome-logo').value.trim();
-            brandingConfig.welcomeBtnLabel = document.getElementById('custom-welcome-btn').value.trim() || "Start Shopping";
-            brandingConfig.footerText = document.getElementById('custom-footer-text').value.trim() || "VendingGo! Smart System";
-
-            localStorage.setItem('vending_branding', JSON.stringify(brandingConfig));
-            applyBrandingToUI();
-        }
-
-        function applyBrandingToUI() {
-            document.getElementById('main-header-title').textContent = brandingConfig.headerTitle;
-            document.getElementById('header-subtitle').textContent = brandingConfig.headerSubtitle;
-            document.getElementById('welcome-title-text').textContent = brandingConfig.welcomeTitle;
-            document.getElementById('welcome-subtitle-text').textContent = brandingConfig.welcomeSubtitle;
-            document.getElementById('welcome-btn-label').textContent = brandingConfig.welcomeBtnLabel;
-            document.getElementById('app-footer-text').textContent = brandingConfig.footerText;
-
-            const logoImgWelcome = document.getElementById('welcome-logo-img');
-            const logoIconWelcome = document.getElementById('welcome-logo-icon');
-            const logoImgHeader = document.getElementById('header-logo-img');
-            const logoIconHeader = document.getElementById('header-logo-icon');
-
-            if (brandingConfig.welcomeLogo) {
-                if(logoImgWelcome) { logoImgWelcome.src = brandingConfig.welcomeLogo; logoImgWelcome.classList.remove('hidden'); }
-                if(logoIconWelcome) logoIconWelcome.classList.add('hidden');
-                if(logoImgHeader) { logoImgHeader.src = brandingConfig.welcomeLogo; logoImgHeader.classList.remove('hidden'); }
-                if(logoIconHeader) logoIconHeader.classList.add('hidden');
-            } else {
-                if(logoImgWelcome) logoImgWelcome.classList.add('hidden');
-                if(logoIconWelcome) logoIconWelcome.classList.remove('hidden');
-                if(logoImgHeader) logoImgHeader.classList.add('hidden');
-                if(logoIconHeader) logoIconHeader.classList.remove('hidden');
+            function saveCatalogLocal() {
+                localStorage.setItem('vending_catalog', JSON.stringify(CATALOG));
             }
 
-            if(document.getElementById('custom-header-title')) document.getElementById('custom-header-title').value = brandingConfig.headerTitle;
-            if(document.getElementById('custom-header-subtitle')) document.getElementById('custom-header-subtitle').value = brandingConfig.headerSubtitle;
-            if(document.getElementById('custom-welcome-title')) document.getElementById('custom-welcome-title').value = brandingConfig.welcomeTitle;
-            if(document.getElementById('custom-welcome-subtitle')) document.getElementById('custom-welcome-subtitle').value = brandingConfig.welcomeSubtitle;
-            if(document.getElementById('custom-welcome-desc')) document.getElementById('custom-welcome-desc').value = brandingConfig.welcomeDesc;
-            if(document.getElementById('custom-welcome-logo')) document.getElementById('custom-welcome-logo').value = brandingConfig.welcomeLogo;
-            if(document.getElementById('custom-welcome-btn')) document.getElementById('custom-welcome-btn').value = brandingConfig.welcomeBtnLabel;
-            if(document.getElementById('custom-footer-text')) document.getElementById('custom-footer-text').value = brandingConfig.footerText;
-        }
+            function saveMasterBranding() {
+                brandingConfig.headerTitle = document.getElementById('custom-header-title').value.trim() || "VendingGo!";
+                brandingConfig.headerSubtitle = document.getElementById('custom-header-subtitle').value.trim() || "Smart Kiosk Platform";
+                brandingConfig.welcomeTitle = document.getElementById('custom-welcome-title').value.trim() || "Karthik's Shop";
+                brandingConfig.welcomeSubtitle = document.getElementById('custom-welcome-subtitle').value.trim() || "VendingGo! Smart Kiosk";
+                brandingConfig.welcomeDesc = document.getElementById('custom-welcome-desc').value.trim();
+                brandingConfig.welcomeLogo = document.getElementById('custom-welcome-logo').value.trim();
+                brandingConfig.welcomeBtnLabel = document.getElementById('custom-welcome-btn').value.trim() || "Start Shopping";
+                brandingConfig.footerText = document.getElementById('custom-footer-text').value.trim() || "VendingGo! Smart System";
 
-        function changeAdminPin() {
-            const oldPin = document.getElementById('admin-old-pin').value.trim();
-            const newPin = document.getElementById('admin-new-pin').value.trim();
-            if (oldPin !== adminPinCode) return;
-            if (!newPin || newPin.length < 4) return;
-            adminPinCode = newPin;
-            localStorage.setItem('vending_admin_pin', adminPinCode);
-            document.getElementById('admin-old-pin').value = '';
-            document.getElementById('admin-new-pin').value = '';
-        }
+                localStorage.setItem('vending_branding', JSON.stringify(brandingConfig));
+                applyBrandingToUI();
+            }
 
-        function changeMasterAdminPin() {
-            const oldPin = document.getElementById('master-admin-old-pin').value.trim();
-            const newPin = document.getElementById('master-admin-new-pin').value.trim();
-            if (oldPin !== adminPinCode) return;
-            if (!newPin || newPin.length < 4) return;
-            adminPinCode = newPin;
-            localStorage.setItem('vending_admin_pin', adminPinCode);
-            document.getElementById('master-admin-old-pin').value = '';
-            document.getElementById('master-admin-new-pin').value = '';
-        }
+            function applyBrandingToUI() {
+                document.getElementById('main-header-title').textContent = brandingConfig.headerTitle;
+                document.getElementById('header-subtitle').textContent = brandingConfig.headerSubtitle;
+                document.getElementById('welcome-title-text').textContent = brandingConfig.welcomeTitle;
+                document.getElementById('welcome-subtitle-text').textContent = brandingConfig.welcomeSubtitle;
+                document.getElementById('welcome-btn-label').textContent = brandingConfig.welcomeBtnLabel;
+                document.getElementById('app-footer-text').textContent = brandingConfig.footerText;
 
-        function startTimer(seconds) {
-            let timeLeft = seconds;
-            const timerEl = document.getElementById('timer');
-            const timerBar = document.getElementById('timer-bar');
-            if (timerInterval) clearInterval(timerInterval);
-            if (timerEl) timerEl.textContent = timeLeft;
-            if (timerBar) timerBar.style.width = '100%';
+                const logoImgWelcome = document.getElementById('welcome-logo-img');
+                const logoIconWelcome = document.getElementById('welcome-logo-icon');
+                const logoImgHeader = document.getElementById('header-logo-img');
+                const logoIconHeader = document.getElementById('header-logo-icon');
 
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                if (timerEl) timerEl.textContent = timeLeft;
-                if (timerBar) timerBar.style.width = `${(timeLeft / seconds) * 100}%`;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    resetKiosk();
+                if (brandingConfig.welcomeLogo) {
+                    if(logoImgWelcome) { logoImgWelcome.src = brandingConfig.welcomeLogo; logoImgWelcome.classList.remove('hidden'); }
+                    if(logoIconWelcome) logoIconWelcome.classList.add('hidden');
+                    if(logoImgHeader) { logoImgHeader.src = brandingConfig.welcomeLogo; logoImgHeader.classList.remove('hidden'); }
+                    if(logoIconHeader) logoIconHeader.classList.add('hidden');
+                } else {
+                    if(logoImgWelcome) logoImgWelcome.classList.add('hidden');
+                    if(logoIconWelcome) logoIconWelcome.classList.remove('hidden');
+                    if(logoImgHeader) logoImgHeader.classList.add('hidden');
+                    if(logoIconHeader) logoIconHeader.classList.remove('hidden');
                 }
-            }, 1000);
-        }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            applyBrandingToUI();
-            renderProducts();
-        });
-    </script>
-</body>
-</html>
+                if(document.getElementById('custom-header-title')) document.getElementById('custom-header-title').value = brandingConfig.headerTitle;
+                if(document.getElementById('custom-header-subtitle')) document.getElementById('custom-header-subtitle').value = brandingConfig.headerSubtitle;
+                if(document.getElementById('custom-welcome-title')) document.getElementById('custom-welcome-title').value = brandingConfig.welcomeTitle;
+                if(document.getElementById('custom-welcome-subtitle')) document.getElementById('custom-welcome-subtitle').value = brandingConfig.welcomeSubtitle;
+                if(document.getElementById('custom-welcome-desc')) document.getElementById('custom-welcome-desc').value = brandingConfig.welcomeDesc;
+                if(document.getElementById('custom-welcome-logo')) document.getElementById('custom-welcome-logo').value = brandingConfig.welcomeLogo;
+                if(document.getElementById('custom-welcome-btn')) document.getElementById('custom-welcome-btn').value = brandingConfig.welcomeBtnLabel;
+                if(document.getElementById('custom-footer-text')) document.getElementById('custom-footer-text').value = brandingConfig.footerText;
+            }
+
+            function changeAdminPin() {
+                const oldPin = document.getElementById('admin-old-pin').value.trim();
+                const newPin = document.getElementById('admin-new-pin').value.trim();
+                if (oldPin !== adminPinCode) return;
+                if (!newPin || newPin.length < 4) return;
+                adminPinCode = newPin;
+                localStorage.setItem('vending_admin_pin', adminPinCode);
+                document.getElementById('admin-old-pin').value = '';
+                document.getElementById('admin-new-pin').value = '';
+            }
+
+            function changeMasterAdminPin() {
+                const oldPin = document.getElementById('master-admin-old-pin').value.trim();
+                const newPin = document.getElementById('master-admin-new-pin').value.trim();
+                if (oldPin !== adminPinCode) return;
+                if (!newPin || newPin.length < 4) return;
+                adminPinC
