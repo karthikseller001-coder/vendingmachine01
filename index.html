@@ -4,17 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VendingGo! - Smart Vending Kiosk</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Razorpay Checkout SDK for Live API Key Payments -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-    <!-- Supabase JS SDK (Replacing Firebase) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
@@ -62,10 +55,8 @@
 </head>
 <body class="bg-slate-950 text-slate-800 antialiased flex items-center justify-center min-h-screen p-0">
 
-    <!-- Outer Device Surround -->
     <div class="w-full min-h-screen sm:h-screen bg-white shadow-2xl rounded-none overflow-hidden flex flex-col relative border-0 shrink-0">
 
-        <!-- Top Header Bar -->
         <header class="bg-vending-header text-white px-6 py-3.5 flex items-center justify-between shadow-lg shrink-0 z-20 border-b border-emerald-900/40">
             <div class="flex items-center gap-3 cursor-pointer select-none active:scale-95 transition-transform" onclick="handleSecretHeaderTap()">
                 <div class="bg-white/10 p-2 rounded-2xl flex items-center justify-center overflow-hidden w-10 h-10 border border-white/10 shadow-inner">
@@ -84,7 +75,6 @@
             </div>
         </header>
 
-        <!-- Main Content Scrollable Area -->
         <main class="flex-1 overflow-y-auto relative bg-vending-bg flex flex-col w-full text-slate-800">
 
             <!-- 1. WELCOME SCREEN -->
@@ -153,7 +143,7 @@
                 </div>
             </div>
 
-            <!-- 4. PAYMENT SCREEN - Dynamic UPI QR & Razorpay Direct Option -->
+            <!-- 4. PAYMENT SCREEN -->
             <div id="payment-screen" class="screen hidden px-5 py-5 flex flex-col items-center justify-between text-center h-full overflow-y-auto pb-28">
                 <div class="w-full">
                     <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-2xl mb-3 flex flex-col items-center gap-1 shadow-sm">
@@ -169,7 +159,6 @@
                     <h2 class="font-extrabold text-base text-slate-900 mb-0.5">Scan & Pay via UPI</h2>
                     <p class="text-[11px] text-slate-500 mb-3">Scan the QR code using Google Pay, PhonePe, Paytm or UPI App</p>
 
-                    <!-- Dynamic UPI QR Code Display Box -->
                     <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-md inline-block mb-3">
                         <div class="w-40 h-40 bg-slate-50 border-2 border-slate-200 rounded-2xl flex flex-col items-center justify-center p-2 relative overflow-hidden">
                             <img id="dynamic-upi-qr" src="" alt="UPI QR Code" class="w-full h-full object-contain">
@@ -323,7 +312,6 @@
                     <button onclick="saveMasterBranding()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 rounded-xl shadow cursor-pointer">Save & Apply Text Changes</button>
                 </div>
 
-                <!-- Web Serial Port Connection Panel for ESP32 -->
                 <div class="bg-white p-4 rounded-2xl border border-purple-200 mb-4 space-y-3 text-xs shadow-sm">
                     <h3 class="font-extrabold text-purple-900 border-b pb-1 flex items-center justify-between">
                         <span>ESP32 Hardware Serial Port</span>
@@ -343,7 +331,6 @@
 
         </main>
 
-        <!-- Sticky Bottom Bar -->
         <nav id="sticky-bottom-bar" class="hidden absolute bottom-10 left-4 right-4 sm:left-12 sm:right-12 bg-white/95 backdrop-blur-md border border-slate-200 px-5 py-3 rounded-3xl shadow-2xl z-30 max-w-2xl mx-auto">
             <div id="bottom-action-container" class="flex items-center justify-between w-full"></div>
         </nav>
@@ -353,7 +340,6 @@
         </footer>
     </div>
 
-    <!-- ADMIN PIN MODAL -->
     <div id="admin-auth-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl p-6 w-full max-w-xs shadow-2xl text-center space-y-4">
             <h3 class="font-extrabold text-slate-900 text-base">Security Access PIN</h3>
@@ -370,16 +356,12 @@
     </div>
 
     <script>
-        // --- Supabase Configuration ---
-        const SUPABASE_URL = "https://YOUR_SUPABASE_PROJECT_ID.supabase.co"; // మీ Supabase URL తో రీప్లేస్ చేయండి
-        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // మీ Supabase Anon API Key తో రీప్లేస్ చేయండి
-        
-        // Initialize Supabase Client
+        const SUPABASE_URL = "https://YOUR_SUPABASE_PROJECT_ID.supabase.co"; 
+        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Merchant UPI & Razorpay Config
-        const MERCHANT_UPI_ID = "your_merchant_upi_id@oksbi"; // మీ UPI ID
-        const RAZORPAY_KEY_ID = "YOUR_RAZORPAY_KEY_ID"; // మీ Razorpay Live / Test Key
+        const MERCHANT_UPI_ID = "your_merchant_upi_id@oksbi"; 
+        const RAZORPAY_KEY_ID = "YOUR_RAZORPAY_KEY_ID"; 
 
         const DEFAULT_CATALOG = [
             { id: 'coke', name: 'Coca-Cola Can', category: 'drinks', desc: 'Chilled 330ml Can with fresh refreshing taste', price: 40, stock: 8, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=150&auto=format&fit=crop&q=80', slot: 'P1' },
@@ -407,7 +389,6 @@
         let secretTapCount = 0;
         let secretTapTimer = null;
 
-        // Web Serial Global Variables
         let serialPort = null;
         let serialWriter = null;
 
@@ -478,7 +459,7 @@
                     }
                 } catch (err) {
                     console.error(err);
-                } font-mono {
+                } finally {
                     reader.releaseLock();
                 }
             }
@@ -492,7 +473,6 @@
             }
         }
 
-        // Supabase లో ఆర్డర్ వివరాలను సేవ్ చేసే ఫంక్షన్
         async function saveOrderToSupabase(txId, totals, items) {
             try {
                 const { data, error } = await supabase
@@ -510,7 +490,7 @@
                 if (error) {
                     console.error("Supabase Error:", error.message);
                 } else {
-                    console.log("Order saved to Supabase successfully:", data);
+                    console.log("Order saved to Supabase successfully", data);
                 }
             } catch (err) {
                 console.error("Exception saving to Supabase:", err);
@@ -604,7 +584,6 @@
             const amtEl = document.getElementById('qr-total-amount');
             if (amtEl) amtEl.textContent = `₹${totals.grandTotal}`;
             
-            // Dynamic UPI URI Format
             const upiUri = `upi://pay?pa=${MERCHANT_UPI_ID}&pn=VendingGo&am=${totals.grandTotal}&cu=INR`;
             const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`;
             
@@ -614,12 +593,11 @@
             showScreen('payment-screen');
         }
 
-        // Razorpay SDK popup payment logic
         function payWithRazorpaySDK() {
             const totals = getCartTotals();
             const options = {
                 "key": RAZORPAY_KEY_ID,
-                "amount": totals.grandTotal * 100, // Amount in paise
+                "amount": totals.grandTotal * 100, 
                 "currency": "INR",
                 "name": brandingConfig.welcomeTitle,
                 "description": "Smart Vending Order Payment",
@@ -776,7 +754,6 @@
                     const currentItem = itemsToDispense[index];
                     const currentSlot = dispenseSlotCommands[index];
                     
-                    // Send command to ESP32 via Web Serial
                     sendSerialCommand(currentSlot);
 
                     setTimeout(() => {
@@ -796,7 +773,6 @@
                     }
                     saveCatalogLocal();
                     
-                    // ఆర్డర్ పూర్తయిన తర్వాత Supabase లో సమాచారాన్ని సేవ్ చేయడం
                     const txId = "TXN" + Math.floor(100000 + Math.random() * 900000);
                     const totals = getCartTotals();
                     saveOrderToSupabase(txId, totals, orderedItemsList);
