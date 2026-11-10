@@ -1049,11 +1049,28 @@
             document.getElementById('master-admin-new-pin').value = '';
         }
 
-        // Initialize App on Load
         window.addEventListener('DOMContentLoaded', () => {
             applyBrandingToUI();
             renderProducts();
         });
+
+        // Make functions globally accessible
+        window.showScreen = showScreen;
+        window.connectSerialPort = connectSerialPort;
+        window.disconnectSerialPort = disconnectSerialPort;
+        window.saveMasterBranding = saveMasterBranding;
+        window.resetKiosk = resetKiosk;
+        window.updateCart = updateCart;
+        window.setupPaymentAndShow = setupPaymentAndShow;
+        window.changeAdminPin = changeAdminPin;
+        window.changeMasterAdminPin = changeMasterAdminPin;
+        window.addNewProduct = addNewProduct;
+        window.deleteProduct = deleteProduct;
+        window.clearCart = clearCart;
+        window.verifyAdminPin = verifyAdminPin;
+        window.closeAdminAuthModal = closeAdminAuthModal;
+        window.handleSecretHeaderTap = handleSecretHeaderTap;
+
     </script>
 </body>
 </html>
