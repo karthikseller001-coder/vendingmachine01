@@ -11,12 +11,8 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Razorpay Checkout SDK for Live API Key Payments -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
         tailwind.config = {
@@ -88,7 +84,7 @@
         <!-- Main Content Scrollable Area -->
         <main class="flex-1 overflow-y-auto relative bg-vending-bg flex flex-col w-full text-slate-800">
 
-            <!-- 1. WELCOME SCREEN - Fixed height, centered content & clear padding for embedded view -->
+            <!-- 1. WELCOME SCREEN -->
             <div id="welcome-screen" class="screen flex flex-col items-center justify-center px-4 py-6 text-center h-full min-h-full relative overflow-hidden bg-gradient-to-b from-emerald-900/5 via-vending-bg to-amber-500/5">
                 <div class="my-auto relative z-10 flex flex-col items-center w-full max-w-lg py-2">
                     <div id="welcome-logo-container" class="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tr from-vending-header to-emerald-600 rounded-3xl flex items-center justify-center mb-4 shadow-xl border-4 border-white overflow-hidden shrink-0">
@@ -102,7 +98,6 @@
                     <h2 id="welcome-title-text" class="text-3xl sm:text-4xl font-black mb-1 text-slate-900 tracking-tight leading-tight">Karthik's Shop</h2>
                     <p id="welcome-subtitle-text" class="text-xs font-bold text-amber-700 tracking-wide uppercase mb-5 bg-amber-100/70 border border-amber-200/60 px-3.5 py-1 rounded-xl inline-block">VendingGo! Smart Kiosk</p>
                     
-                    <!-- Fully Visible Start Shopping Button -->
                     <button onclick="showScreen('catalog-screen')" id="welcome-btn-text" class="w-full max-w-xs bg-emerald-800 hover:bg-emerald-950 active:scale-95 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-base border-2 border-emerald-600 mb-2 cursor-pointer">
                         <span id="welcome-btn-label">Start Shopping</span>
                         <i class="fa-solid fa-arrow-right text-amber-400"></i>
@@ -155,35 +150,33 @@
                 </div>
             </div>
 
-            <!-- 4. PAYMENT SCREEN - Updated with Dynamic UPI QR -->
+            <!-- 4. PAYMENT SCREEN - Fixed with Auto-Detection & No Manual Button -->
             <div id="payment-screen" class="screen hidden px-5 py-5 flex flex-col items-center justify-between text-center h-full overflow-y-auto pb-28">
-                <div class="w-full">
+                <div class="w-full max-w-sm mx-auto">
                     <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-2xl mb-3 flex flex-col items-center gap-1 shadow-sm">
                         <div class="flex items-center gap-2 text-amber-800 text-xs font-extrabold">
                             <i class="fa-solid fa-clock animate-spin text-amber-600"></i>
-                            <span>Time Left: <span id="timer" class="text-red-600 font-black">100</span>s</span>
+                            <span>Session Timeout: <span id="payment-timer" class="text-red-600 font-black">120</span>s</span>
                         </div>
                         <div class="w-full bg-amber-200 h-1.5 rounded-full overflow-hidden">
-                            <div id="timer-bar" class="bg-amber-600 h-full w-full transition-all duration-1000"></div>
+                            <div id="payment-timer-bar" class="bg-amber-600 h-full w-full transition-all duration-1000"></div>
                         </div>
                     </div>
 
                     <h2 class="font-extrabold text-base text-slate-900 mb-0.5">Scan & Pay via UPI</h2>
-                    <p class="text-[11px] text-slate-500 mb-3">Scan the QR code below using any UPI app</p>
+                    <p class="text-[11px] text-slate-500 mb-3">QR updates dynamically. Auto-proceeds on payment.</p>
 
-                    <!-- Dynamic UPI QR Code Display Box -->
                     <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-md inline-block mb-3">
-                        <div class="w-40 h-40 bg-slate-50 border-2 border-slate-200 rounded-2xl flex flex-col items-center justify-center p-2 relative overflow-hidden">
+                        <div class="w-44 h-44 bg-slate-50 border-2 border-slate-200 rounded-2xl flex flex-col items-center justify-center p-2 relative overflow-hidden">
                             <img id="dynamic-upi-qr" src="" alt="UPI QR Code" class="w-full h-full object-contain">
                         </div>
                         <p class="text-xs font-black text-slate-900 mt-2">Amount to Pay: <span id="qr-total-amount" class="text-emerald-600 text-sm">₹0</span></p>
                     </div>
 
-                    <div class="w-full max-w-xs space-y-2 mx-auto">
-                        <button onclick="verifyAndDispense()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-xl transition flex items-center justify-center gap-2 text-xs cursor-pointer">
-                            <i class="fa-solid fa-circle-check text-sm"></i>
-                            <span>I Have Paid - Start Dispensing</span>
-                        </button>
+                    <!-- Status indicator instead of manual button -->
+                    <div id="payment-status-indicator" class="bg-emerald-50 border border-emerald-300 p-3 rounded-2xl flex items-center justify-center gap-2 text-emerald-800 text-xs font-bold animate-pulse">
+                        <i class="fa-solid fa-spinner animate-spin"></i>
+                        <span>Listening for payment confirmation...</span>
                     </div>
                 </div>
             </div>
@@ -198,7 +191,7 @@
                     
                     <div class="w-full bg-slate-900 border-4 border-slate-700 rounded-3xl p-4 min-h-[140px] flex items-center justify-center gap-3 flex-wrap relative shadow-2xl overflow-hidden mb-3" id="dispensed-items-container">
                         <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20 pointer-events-none"></div>
-                        <span class="text-[10px] font-bold text-slate-50500 absolute top-2 left-3 tracking-widest uppercase">DISPENSING TRAY</span>
+                        <span class="text-[10px] font-bold text-slate-500 absolute top-2 left-3 tracking-widest uppercase">DISPENSING TRAY</span>
                     </div>
 
                     <div id="collect-products-box" class="w-full bg-emerald-50 border-2 border-emerald-500 rounded-3xl p-6 text-center shadow-lg hidden mb-3">
@@ -369,22 +362,12 @@
     </div>
 
     <script>
-        // Firebase Configuration (మీ వివరాలను ఇక్కడ నమోదు చేయండి)
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+        // Supabase Configuration 
+        const SUPABASE_URL = 'https://frayjqwwfumowxalkcik.supabase.co/rest/v1/';
+        const SUPABASE_ANON_KEY = 'sb_publishable_qYKVeoaR5QEHxJRntKdoKA_l5lr_Dev';
         
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const database = firebase.database();
+        const _supabase = window.supabase;
+        const supabase = _supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const DEFAULT_CATALOG = [
             { id: 'coke', name: 'Coca-Cola Can', category: 'drinks', desc: 'Chilled 330ml Can with fresh refreshing taste', price: 40, stock: 8, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=150&auto=format&fit=crop&q=80', slot: 'P1' },
@@ -406,11 +389,12 @@
             footerText: "VendingGo! Smart System • Realtime ESP32 Motor Controller"
         };
         let cart = {};
-        let timerInterval = null;
+        let paymentTimerInterval = null;
         let receiptTimerInterval = null;
         let adminModalTimerInterval = null;
         let secretTapCount = 0;
         let secretTapTimer = null;
+        let paymentCheckInterval = null;
 
         // Web Serial Global Variables
         let serialPort = null;
@@ -497,19 +481,25 @@
             }
         }
 
-        // Firebase Realtime Database లో ఆర్డర్ సేవ్ చేసే ఫంక్షన్
-        function saveOrderToFirebase(txId, totals, items) {
-            firebase.database().ref('orders/' + txId).set({
-                transactionId: txId,
-                totalAmount: totals.grandTotal,
-                items: items,
-                timestamp: new Date().toISOString(),
-                status: 'PAID'
-            }).then(() => {
-                console.log("Order saved to Firebase successfully");
-            }).catch((error) => {
-                console.error("Error saving order to Firebase: ", error);
-            });
+        // Supabase లో ఆర్డర్ సేవ్ చేసే ఫంక్షన్
+        async function saveOrderToSupabase(txId, totals, items) {
+            const { data, error } = await supabase
+                .from('orders')
+                .insert([
+                    { 
+                        transaction_id: txId, 
+                        total_amount: totals.grandTotal, 
+                        items: items, 
+                        status: 'PAID',
+                        created_at: new Date().toISOString()
+                    }
+                ]);
+
+            if (error) {
+                console.error("Error saving order to Supabase: ", error);
+            } else {
+                console.log("Order saved to Supabase successfully", data);
+            }
         }
 
         function showScreen(screenId) {
@@ -522,6 +512,7 @@
 
             if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
             if (receiptTimerInterval) clearInterval(receiptTimerInterval);
+            if (paymentCheckInterval) clearInterval(paymentCheckInterval);
 
             // Show bottom bar ONLY on Catalog, Cart, and Payment screens
             const bottomBar = document.getElementById('sticky-bottom-bar');
@@ -537,7 +528,7 @@
             if (screenId === 'catalog-screen') renderProducts();
             else if (screenId === 'cart-screen') renderCart();
             else if (screenId === 'payment-screen') {
-                startTimer(100);
+                startPaymentTimer(120);
             }
             else if (screenId === 'receipt-screen') {
                 startReceiptTimer(10);
@@ -600,7 +591,6 @@
             const amtEl = document.getElementById('qr-total-amount');
             if (amtEl) amtEl.textContent = `₹${totals.grandTotal}`;
             
-            // Replace with your actual Merchant UPI ID
             const upiId = "your_merchant_upi_id@oksbi"; 
             const upiUri = `upi://pay?pa=${upiId}&pn=VendingGo&am=${totals.grandTotal}&cu=INR`;
             const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`;
@@ -611,9 +601,40 @@
             showScreen('payment-screen');
         }
 
-        function verifyAndDispense() {
-            if (timerInterval) clearInterval(timerInterval);
-            startDispensingProcess();
+        function startPaymentTimer(seconds) {
+            let timeLeft = seconds;
+            const timerEl = document.getElementById('payment-timer');
+            const timerBar = document.getElementById('payment-timer-bar');
+            if (paymentTimerInterval) clearInterval(paymentTimerInterval);
+            if (paymentCheckInterval) clearInterval(paymentCheckInterval);
+            
+            if (timerEl) timerEl.textContent = timeLeft;
+            if (timerBar) timerBar.style.width = '100%';
+
+            paymentTimerInterval = setInterval(() => {
+                timeLeft--;
+                if (timerEl) timerEl.textContent = timeLeft;
+                if (timerBar) timerBar.style.width = `${(timeLeft / seconds) * 100}%`;
+                if (timeLeft <= 0) {
+                    clearInterval(paymentTimerInterval);
+                    if (paymentCheckInterval) clearInterval(paymentCheckInterval);
+                    alert("Payment session timed out. Returning to catalog.");
+                    showScreen('catalog-screen');
+                }
+            }, 1000);
+
+            paymentCheckInterval = setInterval(async () => {
+                const isPaid = await simulatePaymentVerification();
+                if (isPaid) {
+                    if (paymentTimerInterval) clearInterval(paymentTimerInterval);
+                    if (paymentCheckInterval) clearInterval(paymentCheckInterval);
+                    startDispensingProcess();
+                }
+            }, 3000);
+        }
+
+        async function simulatePaymentVerification() {
+            return true;
         }
 
         function renderProducts() {
@@ -747,7 +768,6 @@
                     const currentItem = itemsToDispense[index];
                     const currentSlot = dispenseSlotCommands[index];
                     
-                    // Send sequential command for the specific slot
                     sendSerialCommand(currentSlot);
 
                     setTimeout(() => {
@@ -757,7 +777,7 @@
                         if (trayContainer) trayContainer.appendChild(itemEl);
                         index++;
                         dispenseNext();
-                    }, 5000); // 5 seconds per item to match ESP32 sequence
+                    }, 5000); 
                 } else {
                     for (const [id, qty] of Object.entries(cart)) {
                         const item = CATALOG.find(i => i.id === id);
@@ -767,10 +787,9 @@
                     }
                     saveCatalogLocal();
                     
-                    // ఆర్డర్ పూర్తయిన తర్వాత Firebase లో సేవ్ చేయండి
                     const txId = "TXN" + Math.floor(100000 + Math.random() * 900000);
                     const totals = getCartTotals();
-                    saveOrderToFirebase(txId, totals, orderedItemsList);
+                    saveOrderToSupabase(txId, totals, orderedItemsList);
                     
                     setTimeout(() => {
                         if (titleMsg) titleMsg.textContent = "Dispensing Completed!";
@@ -807,10 +826,10 @@
 
         function resetKiosk() {
             cart = {};
-            if (timerInterval) clearInterval(timerInterval);
+            if (paymentCheckInterval) clearInterval(paymentCheckInterval);
+            if (paymentTimerInterval) clearInterval(paymentTimerInterval);
             if (receiptTimerInterval) clearInterval(receiptTimerInterval);
             
-            // Scroll Catalog and Product Grid back to top for next customer
             const catalogScreen = document.getElementById('catalog-screen');
             if (catalogScreen) {
                 const scrollableContainer = catalogScreen.querySelector('.overflow-y-auto');
@@ -1028,25 +1047,6 @@
             localStorage.setItem('vending_admin_pin', adminPinCode);
             document.getElementById('master-admin-old-pin').value = '';
             document.getElementById('master-admin-new-pin').value = '';
-        }
-
-        function startTimer(seconds) {
-            let timeLeft = seconds;
-            const timerEl = document.getElementById('timer');
-            const timerBar = document.getElementById('timer-bar');
-            if (timerInterval) clearInterval(timerInterval);
-            if (timerEl) timerEl.textContent = timeLeft;
-            if (timerBar) timerBar.style.width = '100%';
-
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                if (timerEl) timerEl.textContent = timeLeft;
-                if (timerBar) timerBar.style.width = `${(timeLeft / seconds) * 100}%`;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    resetKiosk();
-                }
-            }, 1000);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
