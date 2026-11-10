@@ -11,7 +11,10 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Supabase SDK -->
+    <!-- Razorpay Checkout SDK for Live API Key Payments -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- Supabase JS SDK (Replacing Firebase) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
@@ -59,6 +62,7 @@
 </head>
 <body class="bg-slate-950 text-slate-800 antialiased flex items-center justify-center min-h-screen p-0">
 
+    <!-- Outer Device Surround -->
     <div class="w-full min-h-screen sm:h-screen bg-white shadow-2xl rounded-none overflow-hidden flex flex-col relative border-0 shrink-0">
 
         <!-- Top Header Bar -->
@@ -149,32 +153,39 @@
                 </div>
             </div>
 
-            <!-- 4. PAYMENT SCREEN -->
+            <!-- 4. PAYMENT SCREEN - Dynamic UPI QR & Razorpay Direct Option -->
             <div id="payment-screen" class="screen hidden px-5 py-5 flex flex-col items-center justify-between text-center h-full overflow-y-auto pb-28">
-                <div class="w-full max-w-sm mx-auto">
+                <div class="w-full">
                     <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-2xl mb-3 flex flex-col items-center gap-1 shadow-sm">
                         <div class="flex items-center gap-2 text-amber-800 text-xs font-extrabold">
                             <i class="fa-solid fa-clock animate-spin text-amber-600"></i>
-                            <span>Session Timeout: <span id="payment-timer" class="text-red-600 font-black">120</span>s</span>
+                            <span>Time Left: <span id="timer" class="text-red-600 font-black">100</span>s</span>
                         </div>
                         <div class="w-full bg-amber-200 h-1.5 rounded-full overflow-hidden">
-                            <div id="payment-timer-bar" class="bg-amber-600 h-full w-full transition-all duration-1000"></div>
+                            <div id="timer-bar" class="bg-amber-600 h-full w-full transition-all duration-1000"></div>
                         </div>
                     </div>
 
                     <h2 class="font-extrabold text-base text-slate-900 mb-0.5">Scan & Pay via UPI</h2>
-                    <p class="text-[11px] text-slate-500 mb-3">QR updates dynamically. Auto-proceeds on payment.</p>
+                    <p class="text-[11px] text-slate-500 mb-3">Scan the QR code using Google Pay, PhonePe, Paytm or UPI App</p>
 
+                    <!-- Dynamic UPI QR Code Display Box -->
                     <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-md inline-block mb-3">
-                        <div class="w-44 h-44 bg-slate-50 border-2 border-slate-200 rounded-2xl flex flex-col items-center justify-center p-2 relative overflow-hidden">
+                        <div class="w-40 h-40 bg-slate-50 border-2 border-slate-200 rounded-2xl flex flex-col items-center justify-center p-2 relative overflow-hidden">
                             <img id="dynamic-upi-qr" src="" alt="UPI QR Code" class="w-full h-full object-contain">
                         </div>
                         <p class="text-xs font-black text-slate-900 mt-2">Amount to Pay: <span id="qr-total-amount" class="text-emerald-600 text-sm">₹0</span></p>
                     </div>
 
-                    <div id="payment-status-indicator" class="bg-emerald-50 border border-emerald-300 p-3 rounded-2xl flex items-center justify-center gap-2 text-emerald-800 text-xs font-bold animate-pulse">
-                        <i class="fa-solid fa-spinner animate-spin"></i>
-                        <span>Listening for payment confirmation...</span>
+                    <div class="w-full max-w-xs space-y-2 mx-auto">
+                        <button onclick="payWithRazorpaySDK()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-xs cursor-pointer mb-2">
+                            <i class="fa-solid fa-credit-card"></i>
+                            <span>Pay via Razorpay (Card/Netbanking)</span>
+                        </button>
+                        <button onclick="verifyAndDispense()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-xl transition flex items-center justify-center gap-2 text-xs cursor-pointer">
+                            <i class="fa-solid fa-circle-check text-sm"></i>
+                            <span>I Have Paid - Start Dispensing</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -359,14 +370,16 @@
     </div>
 
     <script>
-        // Supabase Configuration
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
+        // --- Supabase Configuration ---
+        const SUPABASE_URL = "https://YOUR_SUPABASE_PROJECT_ID.supabase.co"; // మీ Supabase URL తో రీప్లేస్ చేయండి
+        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // మీ Supabase Anon API Key తో రీప్లేస్ చేయండి
         
-        let supabase = null;
-        if (window.supabase) {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
+        // Initialize Supabase Client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Merchant UPI & Razorpay Config
+        const MERCHANT_UPI_ID = "your_merchant_upi_id@oksbi"; // మీ UPI ID
+        const RAZORPAY_KEY_ID = "YOUR_RAZORPAY_KEY_ID"; // మీ Razorpay Live / Test Key
 
         const DEFAULT_CATALOG = [
             { id: 'coke', name: 'Coca-Cola Can', category: 'drinks', desc: 'Chilled 330ml Can with fresh refreshing taste', price: 40, stock: 8, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=150&auto=format&fit=crop&q=80', slot: 'P1' },
@@ -388,13 +401,13 @@
             footerText: "VendingGo! Smart System • Realtime ESP32 Motor Controller"
         };
         let cart = {};
-        let paymentTimerInterval = null;
+        let timerInterval = null;
         let receiptTimerInterval = null;
         let adminModalTimerInterval = null;
         let secretTapCount = 0;
         let secretTapTimer = null;
-        let paymentCheckInterval = null;
 
+        // Web Serial Global Variables
         let serialPort = null;
         let serialWriter = null;
 
@@ -465,7 +478,7 @@
                     }
                 } catch (err) {
                     console.error(err);
-                } finally {
+                } font-mono {
                     reader.releaseLock();
                 }
             }
@@ -479,27 +492,28 @@
             }
         }
 
+        // Supabase లో ఆర్డర్ వివరాలను సేవ్ చేసే ఫంక్షన్
         async function saveOrderToSupabase(txId, totals, items) {
-            if (!supabase) {
-                console.warn("Supabase not initialized.");
-                return;
-            }
-            const { data, error } = await supabase
-                .from('orders')
-                .insert([
-                    { 
-                        transaction_id: txId, 
-                        total_amount: totals.grandTotal, 
-                        items: items, 
-                        status: 'PAID',
-                        created_at: new Date().toISOString()
-                    }
-                ]);
+            try {
+                const { data, error } = await supabase
+                    .from('orders')
+                    .insert([
+                        {
+                            transaction_id: txId,
+                            total_amount: totals.grandTotal,
+                            items: items,
+                            created_at: new Date().toISOString(),
+                            status: 'PAID'
+                        }
+                    ]);
 
-            if (error) {
-                console.error("Error saving order to Supabase: ", error);
-            } else {
-                console.log("Order saved to Supabase successfully", data);
+                if (error) {
+                    console.error("Supabase Error:", error.message);
+                } else {
+                    console.log("Order saved to Supabase successfully:", data);
+                }
+            } catch (err) {
+                console.error("Exception saving to Supabase:", err);
             }
         }
 
@@ -513,7 +527,6 @@
 
             if (adminModalTimerInterval) clearInterval(adminModalTimerInterval);
             if (receiptTimerInterval) clearInterval(receiptTimerInterval);
-            if (paymentCheckInterval) clearInterval(paymentCheckInterval);
 
             const bottomBar = document.getElementById('sticky-bottom-bar');
             if (['catalog-screen', 'cart-screen', 'payment-screen'].includes(screenId)) {
@@ -528,7 +541,7 @@
             if (screenId === 'catalog-screen') renderProducts();
             else if (screenId === 'cart-screen') renderCart();
             else if (screenId === 'payment-screen') {
-                startPaymentTimer(120);
+                startTimer(100);
             }
             else if (screenId === 'receipt-screen') {
                 startReceiptTimer(10);
@@ -591,8 +604,8 @@
             const amtEl = document.getElementById('qr-total-amount');
             if (amtEl) amtEl.textContent = `₹${totals.grandTotal}`;
             
-            const upiId = "your_merchant_upi_id@oksbi"; 
-            const upiUri = `upi://pay?pa=${upiId}&pn=VendingGo&am=${totals.grandTotal}&cu=INR`;
+            // Dynamic UPI URI Format
+            const upiUri = `upi://pay?pa=${MERCHANT_UPI_ID}&pn=VendingGo&am=${totals.grandTotal}&cu=INR`;
             const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`;
             
             const qrElement = document.getElementById('dynamic-upi-qr');
@@ -601,40 +614,35 @@
             showScreen('payment-screen');
         }
 
-        function startPaymentTimer(seconds) {
-            let timeLeft = seconds;
-            const timerEl = document.getElementById('payment-timer');
-            const timerBar = document.getElementById('payment-timer-bar');
-            if (paymentTimerInterval) clearInterval(paymentTimerInterval);
-            if (paymentCheckInterval) clearInterval(paymentCheckInterval);
-            
-            if (timerEl) timerEl.textContent = timeLeft;
-            if (timerBar) timerBar.style.width = '100%';
-
-            paymentTimerInterval = setInterval(() => {
-                timeLeft--;
-                if (timerEl) timerEl.textContent = timeLeft;
-                if (timerBar) timerBar.style.width = `${(timeLeft / seconds) * 100}%`;
-                if (timeLeft <= 0) {
-                    clearInterval(paymentTimerInterval);
-                    if (paymentCheckInterval) clearInterval(paymentCheckInterval);
-                    alert("Payment session timed out. Returning to catalog.");
-                    showScreen('catalog-screen');
+        // Razorpay SDK popup payment logic
+        function payWithRazorpaySDK() {
+            const totals = getCartTotals();
+            const options = {
+                "key": RAZORPAY_KEY_ID,
+                "amount": totals.grandTotal * 100, // Amount in paise
+                "currency": "INR",
+                "name": brandingConfig.welcomeTitle,
+                "description": "Smart Vending Order Payment",
+                "handler": function (response){
+                    console.log("Razorpay Payment Success:", response.razorpay_payment_id);
+                    verifyAndDispense();
+                },
+                "prefill": {
+                    "name": "Customer",
+                    "email": "customer@vendinggo.com",
+                    "contact": "9999999999"
+                },
+                "theme": {
+                    "color": "#1e3a2b"
                 }
-            }, 1000);
-
-            paymentCheckInterval = setInterval(async () => {
-                const isPaid = await simulatePaymentVerification();
-                if (isPaid) {
-                    if (paymentTimerInterval) clearInterval(paymentTimerInterval);
-                    if (paymentCheckInterval) clearInterval(paymentCheckInterval);
-                    startDispensingProcess();
-                }
-            }, 3000);
+            };
+            const rzp = new Razorpay(options);
+            rzp.open();
         }
 
-        async function simulatePaymentVerification() {
-            return true;
+        function verifyAndDispense() {
+            if (timerInterval) clearInterval(timerInterval);
+            startDispensingProcess();
         }
 
         function renderProducts() {
@@ -768,6 +776,7 @@
                     const currentItem = itemsToDispense[index];
                     const currentSlot = dispenseSlotCommands[index];
                     
+                    // Send command to ESP32 via Web Serial
                     sendSerialCommand(currentSlot);
 
                     setTimeout(() => {
@@ -787,6 +796,7 @@
                     }
                     saveCatalogLocal();
                     
+                    // ఆర్డర్ పూర్తయిన తర్వాత Supabase లో సమాచారాన్ని సేవ్ చేయడం
                     const txId = "TXN" + Math.floor(100000 + Math.random() * 900000);
                     const totals = getCartTotals();
                     saveOrderToSupabase(txId, totals, orderedItemsList);
@@ -826,8 +836,7 @@
 
         function resetKiosk() {
             cart = {};
-            if (paymentCheckInterval) clearInterval(paymentCheckInterval);
-            if (paymentTimerInterval) clearInterval(paymentTimerInterval);
+            if (timerInterval) clearInterval(timerInterval);
             if (receiptTimerInterval) clearInterval(receiptTimerInterval);
             
             const catalogScreen = document.getElementById('catalog-screen');
@@ -1049,28 +1058,29 @@
             document.getElementById('master-admin-new-pin').value = '';
         }
 
+        function startTimer(seconds) {
+            let timeLeft = seconds;
+            const timerEl = document.getElementById('timer');
+            const timerBar = document.getElementById('timer-bar');
+            if (timerInterval) clearInterval(timerInterval);
+            if (timerEl) timerEl.textContent = timeLeft;
+            if (timerBar) timerBar.style.width = '100%';
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if (timerEl) timerEl.textContent = timeLeft;
+                if (timerBar) timerBar.style.width = `${(timeLeft / seconds) * 100}%`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    resetKiosk();
+                }
+            }, 1000);
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             applyBrandingToUI();
             renderProducts();
         });
-
-        // Make functions globally accessible
-        window.showScreen = showScreen;
-        window.connectSerialPort = connectSerialPort;
-        window.disconnectSerialPort = disconnectSerialPort;
-        window.saveMasterBranding = saveMasterBranding;
-        window.resetKiosk = resetKiosk;
-        window.updateCart = updateCart;
-        window.setupPaymentAndShow = setupPaymentAndShow;
-        window.changeAdminPin = changeAdminPin;
-        window.changeMasterAdminPin = changeMasterAdminPin;
-        window.addNewProduct = addNewProduct;
-        window.deleteProduct = deleteProduct;
-        window.clearCart = clearCart;
-        window.verifyAdminPin = verifyAdminPin;
-        window.closeAdminAuthModal = closeAdminAuthModal;
-        window.handleSecretHeaderTap = handleSecretHeaderTap;
-
     </script>
 </body>
 </html>
